@@ -1,0 +1,208 @@
+Stack Overflow
+1. About
+2. Products
+3. For Teams
+Íà÷àëî ôîðìû
+
+Êîíåö ôîðìû
+1. 
+2. 
+3. Log in
+4. Sign up
+Join Stack Overflow to find the best answer to your technical question, help others answer theirs.
+Sign up with email Sign up with Google Sign up with GitHub Sign up with Facebook
+Íà÷àëî ôîðìû
+Êîíåö ôîðìû
+1. 
+Home
+
+2. 
+1. PUBLIC
+2. Questions
+3. 
+Tags
+
+4. 
+Users
+
+5. 
+Companies
+
+6. COLLECTIVES
+7. Explore Collectives
+3. 
+1. TEAMS
+Stack Overflow for Teams – Start collaborating and sharing organizational knowledge.Create a free Team Why Teams?
+Get Element value with minidom with Python
+Ask Question
+Asked 13 years, 10 months ago
+Modified 2 years, 5 months ago
+Viewed 164k times
+126
+28
+I am creating a GUI frontend for the Eve Online API in Python.
+I have successfully pulled the XML data from their server.
+I am trying to grab the value from a node called "name":
+from xml.dom.minidom import parse
+dom = parse("C:\\eve.xml")
+name = dom.getElementsByTagName('name')
+print name
+This seems to find the node, but the output is below:
+[<DOM Element: name at 0x11e6d28>]
+How could I get it to print the value of the node?
+* python
+* dom
+* minidom
+Share
+Follow
+edited Mar 14, 2016 at 11:17
+
+
+
+Martin Thoma
+113k148148 gold badges570570 silver badges875875 bronze badges
+asked Nov 25, 2008 at 13:57
+
+
+
+RailsSon
+19.2k3131 gold badges8181 silver badges104104 bronze badges
+* 7
+It's starting to look like the answer to most "minidom" questions is "use ElementTree". 
+– Warren P
+ Nov 27, 2012 at 16:16
+* 1
+Otoh, if you learn minidom instead of ElementTree, you may take a little longer to start, but you will then be able to do exactly the same thing in practically any other programming language you know or eventually learn, and also be able to leverage many other tools. You pays your money and takes your choice. 
+– TextGeek
+ Jan 26, 2021 at 18:55
+Add a comment
+9 Answers
+Sorted by:
+                                                                        
+189
+It should just be
+name[0].firstChild.nodeValue
+Share
+Follow
+edited Jun 16, 2012 at 2:19
+
+
+
+newbie
+1,44522 gold badges1717 silver badges4242 bronze badges
+answered Nov 25, 2008 at 13:59
+
+
+
+eduffy
+38.2k1212 gold badges9393 silver badges9191 bronze badges
+* 5
+When I do name[0].nodeValue is gives back "None", just to test I passed it name[0].nodeName and it gave me "name" which is correct. Any ideas? 
+– RailsSon
+ Nov 25, 2008 at 14:09
+* 28
+What about name[0].firstChild.nodeValue ? 
+– eduffy
+ Nov 25, 2008 at 14:49
+* 7
+Just beware that you are not relying on implementation details in the xml-generator. There are no guarantees that the first child is the text node nor the only text node in any cases where there can be more than one child node. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2. COLLECTIVES
+3. Explore Collectives
+4. 
+1. TEAMS
+Stack Overflow for Teams – Start collaborating and sharing organizational knowledge.Create a free Team Why Teams?
+Get Element value with minidom with Python
+Ask Question
+Asked 13 years, 10 months ago
+Modified 2 years, 5 months ago
+Viewed 164k times
+126
+28
+I am creating a GUI frontend for the Eve Online API in Python.
+I have successfully pulled the XML data from their server.
+I am trying to grab the value from a node called "name":
+from xml.dom.minidom import parse
+dom = parse("C:\\eve.xml")
+name = dom.getElementsByTagName('name')
+print name
+This seems to find the node, but the output is below:
+[<DOM Element: name at 0x11e6d28>]
+How could I get it to print the value of the node?
+* python
+* dom
+* minidom
+Share
+Follow
+edited Mar 14, 2016 at 11:17
+
+
+
+Martin Thoma
+113k148148 gold badges570570 silver badges875875 bronze badges
+asked Nov 25, 2008 at 13:57
+
+
+
+RailsSon
+19.2k3131 gold badges8181 silver badges104104 bronze badges
+* 7
+It's starting to look like the answer to most "minidom" questions is "use ElementTree". 
+– Warren P
+ Nov 27, 2012 at 16:16
+* 1
+Otoh, if you learn minidom instead of ElementTree, you may take a little longer to start, but you will then be able to do exactly the same thing in practically any other programming language you know or eventually learn, and also be able to leverage many other tools. You pays your money and takes your choice. 
+– TextGeek
+ Jan 26, 2021 at 18:55
+Add a comment
+9 Answers
+Sorted by:
+                                                                        
+189
+It should just be
+name[0].firstChild.nodeValue
+Share
+Follow
+edited Jun 16, 2012 at 2:19
+
+
+
+newbie
+1,44522 gold badges1717 silver badges4242 bronze badges
+answered Nov 25, 2008 at 13:59
+
+
+
+eduffy
+38.2k1212 gold badges9393 silver badges9191 bronze badges
+* 5
+When I do name[0].nodeValue is gives back "None", just to test I passed it name[0].nodeName and it gave me "name" which is correct. Any ideas? 
+– RailsSon
+ Nov 25, 2008 at 14:09
+* 28
+What about name[0].firstChild.nodeValue ? 
+– eduffy
+ Nov 25, 2008 at 14:49
+* 7
+Just beware that you are not relying on implementation details in the xml-generator. There are no guarantees that the first child is the text node nor the only text node in any cases where there can be more than one child node. 
+

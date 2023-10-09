@@ -1,0 +1,41 @@
+// Clipboard
+
+// var clipboard = new Clipboard('.btn');
+ // clipboard.on('success', function(e) {
+        // //Success
+        // e.clearSelection();
+      // });
+ // clipboard.on('error', function(e) {
+      // //Error
+    // });
+// 
+ // var el = $('.brush');
+  // //alert(el.length);
+// 
+////  Add classes
+  // el.each(function(i){
+    // if(i=>0) // If 2nd item then add the class
+      // var brushclass = 'brush-code-' + i.toString();
+    // $(el[i]).addClass(brushclass);
+  ////    Get class element
+      // var x = document.getElementsByClassName(brushclass);
+        // //$(x).after( '<p>Test ' + brushclass + '</p>');
+  ////    Set copy button
+      // $(x).after('<button class="btn btn-xs btn-default brushbtn" title="copy" data-clipboard-target=".' + brushclass +'"><i class="icon-copy"></i></button>');
+// 
+    // });
+  //// Clipboard - End
+
+//  // CSS Delivery
+  // function loadStyleSheet(src) {
+    // if (document.createStyleSheet){
+      // document.createStyleSheet(src);
+    // }
+    // else {
+      // $("head").append($("<link rel='stylesheet' href='"+src+"' type='text/css' media='screen' />"));
+    // }
+  // };
+// 
+  // loadStyleSheet('/components/com_jcomments/tpl/default/style.css?v=3002');
+  // loadStyleSheet('/templates/shaper_helix_ii/css/font-awesome/css/font-awesome.min.css');
+ // // CSS Delivery - End

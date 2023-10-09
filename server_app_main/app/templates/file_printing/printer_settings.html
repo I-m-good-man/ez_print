@@ -1,0 +1,144 @@
+{% extends "/base_templates/base.html" %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='file_printing/shared/styles.css') }}">
+
+    {% block title %}
+        <title>Настройка печати</title>
+    {% endblock %}
+{% endblock %}
+
+{% block body %}
+    <body>
+
+    {% block navbar %}
+        {{ super() }}
+    {% endblock %}
+
+    {% block main %}
+        <section class="main_section">
+            <div class="wrapper">
+                <header>Настройка Печати</header>
+                <section id="error_area"></section>
+                <section id="success_area"></section>
+                <br>
+
+                <form action="{{ url_for('file_printing.price_calculation') }}" method="post" id="printer_settings_form"
+                      class="printer_settings_form">
+                    <table cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td>
+                                {% if printer.monochrome_printing_mode == True %}
+                                    <input type="checkbox" id="monochrome_print_checkbox" name="price"
+                                           checked="checked"/>
+                                    <label for="monochrome_print_checkbox">Черно-белая
+                                        ({{ printer.price_per_page_for_monochrome_printing_mode }} руб./стр.)</label>
+                                {% else %}
+                                    <input type="checkbox" id="monochrome_print_checkbox" name="price"
+                                           style="pointer-events: none;"/>
+                                    <label for="monochrome_print_checkbox"
+                                           style="pointer-events: none; color: darkgrey">Черно-белая
+                                        -
+                                        Недоступна</label>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if printer.color_printing_mode == True %}
+                                    {% if printer.monochrome_printing_mode == False %}
+                                        <input type="checkbox" id="color_print_checkbox" name="price"
+                                               checked="checked"/>
+                                    {% else %}
+                                        <input type="checkbox" id="color_print_checkbox" name="price"/>
+                                    {% endif %}
+                                    <label for="color_print_checkbox">Цветная
+                                        ({{ printer.price_per_page_for_color_printing_mode }} руб./стр.)</label>
+                                {% else %}
+                                    <input type="checkbox" id="color_print_checkbox" name="price"
+                                           style="pointer-events: none;"/>
+                                    <label for="color_print_checkbox" style="pointer-events: none; color: darkgrey">Цветная
+                                        -
+                                        Недоступна</label>
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                {% if printer.flip_over_mode == True and num_of_pages_of_task > 1 %}
+                                    <input type="checkbox" id="flip_over_mode_checkbox" name="duplex_mode"/>
+                                    <label for="flip_over_mode_checkbox">Двухсторонняя печать</label>
+                                {% else %}
+                                    <input type="checkbox" id="flip_over_mode_checkbox" name="duplex_mode"
+                                           style="pointer-events: none;"/>
+                                    <label for="flip_over_mode_checkbox" style="pointer-events: none; color: darkgrey">Двухсторонняя
+                                        печать -
+                                        Недоступна</label>
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <label for="num_of_copies_field">Число копий:</label>
+                                <input type="number" id="num_of_copies_field" name="quantity" min="1" max="50" step="1"
+                                       value="1" required>
+                            </td>
+                        </tr>
+                    </table>
+                    <input type="submit" value="Рассчитать цену" class="get-price-btn"/>
+                </form>
+
+                <section id="html_response"></section>
+                <div class="line"></div>
+
+
+                <header>Файлы Для печати</header>
+                <section class="uploaded-area" id="uploaded_area">
+                    <div class="container" id="uploaded_area_container">
+                        {% for (user_filename, file_id, num_of_pages) in file_features %}
+                            <div class="row docblock">
+                                <div class="col">
+                                    <li class="row">
+                                        <div class="content upload">
+                                            <i class="fas fa-file-alt"></i>
+                                            <div class="details">
+                                                <span class="name">{{ user_filename }}</span>
+                                                <span class="name">Страниц в документе: {{ num_of_pages }}</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="current_printer">
+                    <p>Выбран принтер {{ printer.unique_number }} ({{ printer.location.address }})</p>
+                    <p>Доступно {{ printer.num_of_pages_in_tray }} листов</p>
+                    <form action="{{ url_for('main.choose_printer') }}" method="get">
+                        <input type="submit" value="Сменить принтер" id="change_printer_button"/>
+                    </form>
+
+                </section>
+            </div>
+        </section>
+    {% endblock %}
+
+    {% block footer %}
+        {{ super() }}
+    {% endblock %}
+
+    {% block js_scripts %}
+        {{ super() }}
+        <script src="{{ url_for('static', filename='file_printing/printer_settings/script.js') }}"></script>
+    {% endblock %}
+
+    </body>
+{% endblock %}
+
+{% block loader %}
+    {{ super() }}
+{% endblock %}
+

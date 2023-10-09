@@ -1,0 +1,110 @@
+::selection {
+    color: #fff;
+    background: #739eff;
+}
+
+form :where(i, p) {
+    color: #739eff;
+}
+
+#loader_container {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 1000;
+    background: rgba(115, 158, 255, 0.7);
+}
+
+.text_loading {
+
+    font-size: 48px;
+}
+
+.outer_loader {
+    margin-top: 10px;
+    width: 240px;
+    height: 10px;
+    background-color: #efefef;
+}
+
+.inner_loader {
+    width: 70px;
+    height: 10px;
+    background-color: black;
+    animation: animation 2s infinite;
+}
+
+@keyframes animation {
+    0% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(170px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+  }
+
+
+
+.fa-1x {
+    font-size: 1.5rem;
+}
+
+.navbar-toggler.toggler-example {
+    cursor: pointer;
+}
+
+.dark-blue-text {
+    color: #739eff;
+}
+
+.navbar-brand, .nav-link {
+    color: #739eff !important;
+}
+
+.docblock {
+    width: 100%;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+/*
+footer
+ */
+.footer {
+    background: white;
+}
+
+.footer .title {
+    color: #739eff;
+}
+
+.footer hr {
+    color: #739eff;
+}
+
+.footer .email-icon {
+    color: #1578ea;
+}
+
+/*
+footer
+ */
+
+
+
+
+

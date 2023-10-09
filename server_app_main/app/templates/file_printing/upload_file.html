@@ -1,0 +1,120 @@
+{% extends "/base_templates/base.html" %}
+
+
+{% block head %}
+    {{ super() }}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='file_printing/shared/styles.css') }}">
+
+    {% block title %}
+        <title>Загрузка документов</title>
+    {% endblock %}
+{% endblock %}
+
+{% block body %}
+    <body>
+
+    {% block navbar %}
+        {{ super() }}
+    {% endblock %}
+
+    {% block main %}
+        <section class="main_section">
+            <div class="wrapper">
+                <header>Загрузка Документов</header>
+
+                <form action="{{ url_for('file_printing.upload_file') }}" method="post" type="file"
+                      enctype="multipart/form-data" id="uploadForm" class="file-form">
+
+                    {{ upload_file_form.hidden_tag() }}
+                    {{ upload_file_form.file(class="file-input", id='uploadFile', hidden=True, accept=".docx,.pdf,.odt") }}
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Загрузите документы для печати</p>
+                    {{ upload_file_form.submit(class="submit-input send-file", value="Загрузить", hidden=True) }}
+                    <br>
+                </form>
+                <section id="error_area">
+                    <section id="invalid_extension" style="display: none">
+                        <p class="error-msg">Неподходящее расширение документа!</p>
+                        <form action="{{ url_for('main.available_extensions') }}" method="get">
+                            <input type="submit" value="Доступные расширения" class="extension-btn" />
+                        </form>
+                    </section>
+
+                    <section id="invalid_size_of_document" style="display: none">
+                        <p class="error-msg">Максимальный вес файла 50mb!</p>
+                    </section>
+
+                    <section id="invalid_counting_of_pages" style="display: none">
+                        <p class="error-msg">Ошибка нумерации страниц!</p>
+                    </section>
+
+                    <section id="lack_of_pages_in_printer" style="display: none">
+                        <p class="error-msg">В принтере недостаточно страниц для печати всех документов!</p>
+                    </section>
+                </section>
+                <section id="success_area"></section>
+
+                <br>
+
+                <section class="uploaded-area" id="uploaded_area">
+                    <div class="container" id="uploaded_area_container">
+                        {% for (user_filename, file_id, num_of_pages) in file_features %}
+                            <div class="row docblock">
+                                <div class="col">
+                                    <li class="row">
+                                        <div class="content upload">
+                                            <i class="fas fa-file-alt"></i>
+                                            <div class="details">
+                                                <span class="name">{{ user_filename }}</span>
+                                                <span class="name">Страниц в документе: {{ num_of_pages }}</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </div>
+                                <div class="col submit-block">
+                                    <div class="col">
+                                    </div>
+                                    <div class="col">
+                                    </div>
+                                    <div class="col">
+                                        <form action="{{ url_for('file_printing.delete_file', file_id=file_id) }}"
+                                              name="{{ file_id }}"
+                                              method="post" onsubmit="return delete_file(this)">
+                                            <input type="submit" value="Удалить" class="submit-input"/>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="printer_button">
+                    <form action="{{ url_for('file_printing.printer_settings') }}" method="get" id="next_step_form">
+                        <input type="submit" value="Далее" class="next-step-button"/>
+                    </form>
+                </section>
+
+            </div>
+        </section>
+    {% endblock %}
+
+    {% block footer %}
+        {{ super() }}
+    {% endblock %}
+
+    {% block js_scripts %}
+        {{ super() }}
+        <script src="{{ url_for('static', filename='file_printing/upload_file/script.js') }}"></script>
+    {% endblock %}
+
+    </body>
+{% endblock %}
+
+{% block loader %}
+    {{ super() }}
+{% endblock %}
+
+
+

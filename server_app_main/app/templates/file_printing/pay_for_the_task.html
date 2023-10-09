@@ -1,0 +1,57 @@
+{% extends "/base_templates/base.html" %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='file_printing/shared/styles.css') }}">
+
+    {% block title %}
+        <title>Оплата</title>
+    {% endblock %}
+{% endblock %}
+
+{% block body %}
+    <body>
+
+    {% block navbar %}
+        {{ super() }}
+    {% endblock %}
+
+    {% block main %}
+        <section class="main_section">
+            <div class="wrapper">
+                <header>Оплата</header>
+                <form action="{{ url_for('file_printing.print_task') }}" id="print_task_form">
+                    <input type="submit" value="*Пользователь все оплатил*" id="task_is_paid"/>
+                </form>
+                <form action="{{ url_for('file_printing.get_info_about_printing_task') }}"
+                      id="get_info_about_printing_task_form">
+                </form>
+
+                <section id="error_task_status">
+                    <p style="font-size: 16px; color: red;">Возникла ошибка во время печати!</p>
+                    <p>Свяжитесь с <a href="{{ url_for('main.support') }}">Поддержкой</a> для решения проблемы.</p>
+                </section>
+
+                <section id="success_task_status">
+                    <p style="font-size: 16px; color: green;">Документы успешно напечатаны!</p>
+                    <p>Свяжитесь с <a href="{{ url_for('main.support') }}">Поддержкой</a> если возникла проблема.</p>
+                </section>
+            </div>
+        </section>
+    {% endblock %}
+
+    {% block footer %}
+        {{ super() }}
+    {% endblock %}
+
+    {% block js_scripts %}
+        {{ super() }}
+        <script src="{{ url_for('static', filename='file_printing/pay_for_the_task/script.js') }}"></script>
+    {% endblock %}
+
+    </body>
+{% endblock %}
+
+{% block loader %}
+    {{ super() }}
+{% endblock %}

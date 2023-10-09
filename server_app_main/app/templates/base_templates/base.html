@@ -1,0 +1,156 @@
+{% block head %}
+    <!DOCTYPE html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% block title %}
+            <title>EZ Print</title>
+        {% endblock %}
+
+        <link rel="manifest" href="{{ url_for('static', filename='icons/manifest.webmanifest') }}">
+        <link rel="icon" href="{{ url_for('static', filename='icons/favicon.ico') }}" sizes="any">
+        <link rel="icon" href="{{ url_for('static', filename='icons/icon.svg') }}" type="image/svg+xml">
+
+        <link rel="stylesheet"
+              href="{{ url_for('static', filename='base/styles.css') }}">
+        <link rel="stylesheet"
+              href="{{ url_for('static', filename='external_libs/Font-Awesome-6.x/css/all.min.css') }}">
+
+        <link rel="stylesheet"
+              href="{{ url_for('static', filename='external_libs/bootstrap-4.3.1-dist/css/bootstrap.min.css') }}">
+
+    </head>
+{% endblock %}
+
+{% block body %}
+
+    {% block navbar %}
+        <nav class="navbar navbar-expand-lg navbar-light light-blue lighten-4">
+            <a class="navbar-brand" href="{{ url_for('main.index') }}">EZ Print</a>
+
+            <button class="navbar-toggler toggler-example" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent1" aria-expanded="false"
+                    aria-label="Toggle navigation"><span class="dark-blue-text"><i
+                    class="fas fa-bars fa-1x"></i></span></button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent1">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ url_for('main.index') }}">Главная<span
+                                class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ url_for('main.choose_printer') }}">Печать<span
+                                class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.history') }}">История</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.support') }}">Поддержка</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.discounts') }}">Акции</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.about_project') }}">О проекте</a>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+    {% endblock %}
+
+    {% block main %}
+    {% endblock %}
+
+    {% block footer %}
+        <footer id="footer" class="footer text-dark pt-5 pb-4">
+            <div class="container text-center text-md-left">
+
+                <div class="row text-center text-md-left">
+
+                    <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
+                        <h5 class="text-uppercase mb-4 font-weight-bold title">О нас</h5>
+                        <hr class="mb-4">
+                        <p>EZ Print - это онлайн сервис для печати документов. Мы используем современные технологии,
+                            чтобы делать печать доступной, быстрой и удобной.</p>
+
+                    </div>
+
+                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
+                        <h5 class="text-uppercase mb-4 font-weight-bold title">о компании</h5>
+                        <hr class="mb-4">
+                        <p>
+                            <a href="{{ url_for('main.policy') }}" class="text-dark" style="text-decoration: none;">
+                                Политика конфиденциальности</a>
+                        </p>
+                        <p>
+                            <a href="{{ url_for('main.company_info') }}" class="text-dark"
+                               style="text-decoration: none;"> Реквизиты</a>
+                        </p>
+                    </div>
+
+                    <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
+                        <h5 class="text-uppercase mb-4 font-weight-bold title">Навигация</h5>
+                        <hr class="mb-4">
+                        <p>
+                            <a href="{{ url_for('main.index') }}" class="text-dark" style="text-decoration: none;">
+                                Главная</a>
+                        </p>
+                        <p>
+                            <a href="{{ url_for('main.choose_printer') }}" class="text-dark"
+                               style="text-decoration: none;"> Начать печать</a>
+                        </p>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
+                        <h5 class="text-uppercase mb-4 font-weight-bold title">Контакты</h5>
+                        <hr class="mb-4">
+                        <p>
+                            <i class="fas fa-envelope mr-3 email-icon text-dark"></i>maratxat@ya.ru
+                        </p>
+                        <p>
+                            <a href="https://t.me/ez_print" class="text-dark"><i class="fab fa-telegram mr-3"></i>@ez_print</a>
+                        </p>
+                        <p>
+                            <i class="fa-brands fa-vk"></i>
+                            <a href="https://vk.com/public217457884" class="text-dark"><i
+                                    class="mr-3"></i>Группа ВКонтакте</a>
+                        </p>
+                    </div>
+
+                </div>
+
+                <hr class="mb-4">
+                <div class=" row d-flex justify-content-center">
+                    <div>
+                        <p> Copyright © EZ Print 2022. Все Права Защищены.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    {% endblock %}
+
+    {% block js_scripts %}
+        <script src="{{ url_for('static', filename='external_libs/jquery-3.6.1/jquery-3.6.1.min.js') }}"></script>
+
+        <script src="{{ url_for('static', filename='external_libs/jquery-forms/dist/jquery.form.min.js') }}"></script>
+
+        <script src="{{ url_for('static', filename='external_libs/bootstrap-4.3.1-dist/js/bootstrap.bundle.js') }}"></script>
+    {% endblock %}
+{% endblock %}
+
+{% block loader %}
+    <div id="loader_container">
+        <div class="text_loading">
+            Loading...
+        </div>
+        <div class="outer_loader">
+            <div class="inner_loader"></div>
+        </div>
+    </div>
+{% endblock %}
+
+

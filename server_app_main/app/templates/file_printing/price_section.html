@@ -1,0 +1,17 @@
+<section class="price_section">
+    <p>Всего к печати: {{ num_of_pages }} стр.</p>
+    {% if flip_over_printing_discount_in_percent is not none %}
+        <p>Скидка {{ flip_over_printing_discount_in_percent }}% за двухстороннюю печать применена.</p>
+    {% endif %}
+    <p>Итого: {{ price }} руб.</p>
+    <form action="{{ url_for('file_printing.pay_for_the_task') }}" method="get">
+        <input type="submit" value="Оплатить" class="pay_for_the_task_btn"/>
+    </form>
+
+</section>
+
+
+
+
+
+

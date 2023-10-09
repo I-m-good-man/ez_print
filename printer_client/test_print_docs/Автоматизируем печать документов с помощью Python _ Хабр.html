@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<!-- saved from url=(0035)https://habr.com/ru/sandbox/174800/ -->
+<html lang="ru" class="no-touch"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover,maximum-scale=1,user-scalable=0">
+  <meta name="referrer" content="unsafe-url">
+  <title>Автоматизируем печать документов с помощью Python / Хабр</title>
+  <style>
+    /* cyrillic-ext */
+    @font-face {
+      font-family: 'Fira Sans';
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: url(https://fonts.gstatic.com/s/firasans/v11/va9B4kDNxMZdWfMOD5VnZKveSxf6TF0.woff2) format('woff2');
+      unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+    }
+
+    /* cyrillic */
+    @font-face {
+      font-family: 'Fira Sans';
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: url(https://fonts.gstatic.com/s/firasans/v11/va9B4kDNxMZdWfMOD5VnZKveQhf6TF0.woff2) format('woff2');
+      unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+    }
+
+    /* latin-ext */
+    @font-face {
+      font-family: 'Fira Sans';
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: url(https://fonts.gstatic.com/s/firasans/v11/va9B4kDNxMZdWfMOD5VnZKveSBf6TF0.woff2) format('woff2');
+      unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    }
+
+    /* latin */
+    @font-face {
+      font-family: 'Fira Sans';
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: url(https://fonts.gstatic.com/s/firasans/v11/va9B4kDNxMZdWfMOD5VnZKveRhf6.woff2) format('woff2');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    }
+
+    /* non-breaking hyphen */
+    @font-face {
+      font-family: 'Fira Sans';
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: url(https://fonts.gstatic.com/l/font?kit=KFOlCnqEu92Fr1MmEU9vBh0_IsHAlmrO6g&skey=ee881451c540fdec&v=v29) format('woff2');
+      unicode-range: U+02011;
+    }
+  </style>
+  <link rel="preload" href="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/chunk-vendors.76652d4b.css" as="style"><link rel="preload" href="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/chunk-vendors.a3ff8f09.js.download" as="script"><link rel="preload" href="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/app.9cdf9b0e.css" as="style"><link rel="preload" href="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/app.344a2afd.js.download" as="script"><link rel="preload" href="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/page-article.0a4cc151.css" as="style"><link rel="preload" href="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/page-article.f7c9bd30.js.download" as="script">
+  <link rel="stylesheet" href="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/chunk-vendors.76652d4b.css"><link rel="stylesheet" href="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/app.9cdf9b0e.css"><link rel="stylesheet" href="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/page-article.0a4cc151.css">
+  <script type="text/javascript" async="" src="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/analytics.js.download"></script><script async="" src="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/tag.js.download"></script><script>window.i18nFetch = new Promise((res, rej) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open('GET', '/js/i18n/ru-compiled.6aa513a2e8a86335c6bf81d4cfd55980.json');
+          xhr.responseType = 'json';
+          xhr.onload = function(e) {
+            if (this.status === 200) {
+              res({ru: xhr.response});
+            } else {
+              rej(e);
+            }
+          };
+          xhr.send();
+        });</script>
+  
+  <script data-vue-meta="ssr" type="application/ld+json" data-vmid="ldjson-schema">{"@context":"http:\/\/schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/habr.com\/ru\/post\/174800\/"},"headline":"Автоматизируем печать документов с помощью Python","datePublished":"2022-08-03T14:17:55+03:00","dateModified":"2022-08-03T14:17:55+03:00","author":{"@type":"Person","name":null},"publisher":{"@type":"Organization","name":"Habr","logo":{"@type":"ImageObject","url":"https:\/\/habrastorage.org\/webt\/a_\/lk\/9m\/a_lk9mjkccjox-zccjrpfolmkmq.png"}},"description":"Печать Word и PDF, используя двухсторонний принтер и автоматическая систематизация страниц в PDF, c помощью PythonОбзор1) Начало 2) Задача3) Решение 4) ВыводНача...","url":"https:\/\/habr.com\/ru\/post\/174800\/#post-content-body","about":["h_python","h_client_side_optimization","h_programming","h_win_dev","f_develop"],"image":["https:\/\/habr.com\/share\/publication\/174800\/c17a3f693fc3447efd71dcc3f4145ff5\/"]}</script>
+  <script src="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/gpt.js.download" async=""></script>
+  <style>.grecaptcha-badge{visibility: hidden;}</style>
+  <meta name="habr-version" content="2.90.0">
+  
+  <meta data-vue-meta="ssr" property="fb:app_id" content="444736788986613"><meta data-vue-meta="ssr" property="fb:pages" content="472597926099084"><meta data-vue-meta="ssr" name="twitter:card" content="summary_large_image"><meta data-vue-meta="ssr" name="twitter:site" content="@habr_com"><meta data-vue-meta="ssr" property="og:site_name" content="Хабр" data-vmid="og:site_name"><meta data-vue-meta="ssr" property="og:url" content="https://habr.com/ru/sandbox/174800/" data-vmid="og:url"><meta data-vue-meta="ssr" property="og:title" content="Автоматизируем печать документов с помощью Python" data-vmid="og:title"><meta data-vue-meta="ssr" name="twitter:title" content="Автоматизируем печать документов с помощью Python" data-vmid="twitter:title"><meta data-vue-meta="ssr" name="aiturec:title" content="Автоматизируем печать документов с помощью Python" data-vmid="aiturec:title"><meta data-vue-meta="ssr" name="description" content="Печать Word и PDF, используя двухсторонний принтер и автоматическая систематизация страниц в PDF, c помощью Python Обзор 1) Начало 2) Задача 3) Решение 4) Вывод Начало Меня зовут, Матвеев Дмитрий, и..." data-vmid="description"><meta data-vue-meta="ssr" itemprop="description" content="Печать Word и PDF, используя двухсторонний принтер и автоматическая систематизация страниц в PDF, c помощью Python Обзор 1) Начало 2) Задача 3) Решение 4) Вывод Начало Меня зовут, Матвеев Дмитрий, и..." data-vmid="description:itemprop"><meta data-vue-meta="ssr" property="og:description" content="Печать Word и PDF, используя двухсторонний принтер и автоматическая систематизация страниц в PDF, c помощью Python Обзор 1) Начало 2) Задача 3) Решение 4) Вывод Начало Меня зовут, Матвеев Дмитрий, и..." data-vmid="og:description"><meta data-vue-meta="ssr" name="twitter:description" content="Печать Word и PDF, используя двухсторонний принтер и автоматическая систематизация страниц в PDF, c помощью Python Обзор 1) Начало 2) Задача 3) Решение 4) Вывод Начало Меня зовут, Матвеев Дмитрий, и..." data-vmid="twitter:description"><meta data-vue-meta="ssr" property="aiturec:description" content="Печать Word и PDF, используя двухсторонний принтер и автоматическая систематизация страниц в PDF, c помощью Python Обзор 1) Начало 2) Задача 3) Решение 4) Вывод Начало Меня зовут, Матвеев Дмитрий, и..." data-vmid="aiturec:description"><meta data-vue-meta="ssr" itemprop="image" content="https://habr.com/share/publication/174800/c17a3f693fc3447efd71dcc3f4145ff5/" data-vmid="image:itemprop"><meta data-vue-meta="ssr" property="og:image" content="https://habr.com/share/publication/174800/c17a3f693fc3447efd71dcc3f4145ff5/" data-vmid="og:image"><meta data-vue-meta="ssr" property="og:image:width" content="1200" data-vmid="og:image:width"><meta data-vue-meta="ssr" property="og:image:height" content="630" data-vmid="og:image:height"><meta data-vue-meta="ssr" property="aiturec:image" content="https://habr.com/share/publication/174800/c17a3f693fc3447efd71dcc3f4145ff5/" data-vmid="aiturec:image"><meta data-vue-meta="ssr" name="twitter:image" content="https://habr.com/share/publication/174800/c17a3f693fc3447efd71dcc3f4145ff5/" data-vmid="twitter:image"><meta data-vue-meta="ssr" property="vk:image" content="https://habr.com/share/publication/174800/c17a3f693fc3447efd71dcc3f4145ff5/?format=vk" data-vmid="vk:image"><meta data-vue-meta="ssr" property="aiturec:item_id" content="174800" data-vmid="aiturec:item_id"><meta data-vue-meta="ssr" property="aiturec:datetime" content="2022-08-03T11:17:55.000Z" data-vmid="aiturec:datetime"><meta data-vue-meta="ssr" property="og:type" content="article" data-vmid="og:type"><meta data-vue-meta="ssr" property="og:locale" content="ru_RU" data-vmid="og:locale"><meta data-vue-meta="ssr" name="keywords" content="python, печать документов, автоматизация">
+  <link data-vue-meta="ssr" rel="image_src" href="https://habr.com/img/habr_ru.png" data-vmid="image:href"><link data-vue-meta="ssr" href="https://habr.com/ru/sandbox/174800/" rel="canonical" data-vmid="canonical"><link data-vue-meta="ssr" href="https://habr.com/ru/rss/post/174800/?fl=ru" type="application/rss+xml" title="" rel="alternate" name="rss">
+  <meta name="apple-mobile-web-app-status-bar-style" content="#303b44">
+  <meta name="msapplication-TileColor" content="#629FBC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="shortcut icon" type="image/png" sizes="16x16" href="https://assets.habr.com/habr-web/img/favicons/favicon-16.png">
+  <link rel="shortcut icon" type="image/png" sizes="32x32" href="https://assets.habr.com/habr-web/img/favicons/favicon-32.png">
+  <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="https://assets.habr.com/habr-web/img/favicons/apple-touch-icon-76.png">
+  <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="https://assets.habr.com/habr-web/img/favicons/apple-touch-icon-120.png">
+  <link rel="apple-touch-icon" type="image/png" sizes="152x152" href="https://assets.habr.com/habr-web/img/favicons/apple-touch-icon-152.png">
+  <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="https://assets.habr.com/habr-web/img/favicons/apple-touch-icon-180.png">
+  <link rel="apple-touch-icon" type="image/png" sizes="256x256" href="https://assets.habr.com/habr-web/img/favicons/apple-touch-icon-256.png">
+  <link rel="apple-touch-startup-image" media="screen and (device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="https://assets.habr.com/habr-web/img/splashes/splash_1136x640.png">
+  <link rel="apple-touch-startup-image" media="screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" href="https://assets.habr.com/habr-web/img/splashes/splash_2436x1125.png">
+  <link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="https://assets.habr.com/habr-web/img/splashes/splash_1792x828.png">
+  <link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="https://assets.habr.com/habr-web/img/splashes/splash_828x1792.png">
+  <link rel="apple-touch-startup-image" media="screen and (device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="https://assets.habr.com/habr-web/img/splashes/splash_1334x750.png">
+  <link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="https://assets.habr.com/habr-web/img/splashes/splash_1242x2668.png">
+  <link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" href="https://assets.habr.com/habr-web/img/splashes/splash_2208x1242.png">
+  <link rel="apple-touch-startup-image" media="screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="https://assets.habr.com/habr-web/img/splashes/splash_1125x2436.png">
+  <link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="https://assets.habr.com/habr-web/img/splashes/splash_1242x2208.png">
+  <link rel="apple-touch-startup-image" media="screen and (device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="https://assets.habr.com/habr-web/img/splashes/splash_2732x2048.png">
+  <link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" href="https://assets.habr.com/habr-web/img/splashes/splash_2688x1242.png">
+  <link rel="apple-touch-startup-image" media="screen and (device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="https://assets.habr.com/habr-web/img/splashes/splash_2224x1668.png">
+  <link rel="apple-touch-startup-image" media="screen and (device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="https://assets.habr.com/habr-web/img/splashes/splash_750x1334.png">
+  <link rel="apple-touch-startup-image" media="screen and (device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="https://assets.habr.com/habr-web/img/splashes/splash_2048x2732.png">
+  <link rel="apple-touch-startup-image" media="screen and (device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="https://assets.habr.com/habr-web/img/splashes/splash_2388x1668.png">
+  <link rel="apple-touch-startup-image" media="screen and (device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="https://assets.habr.com/habr-web/img/splashes/splash_1668x2224.png">
+  <link rel="apple-touch-startup-image" media="screen and (device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="https://assets.habr.com/habr-web/img/splashes/splash_640x1136.png">
+  <link rel="apple-touch-startup-image" media="screen and (device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="https://assets.habr.com/habr-web/img/splashes/splash_1668x2388.png">
+  <link rel="apple-touch-startup-image" media="screen and (device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="https://assets.habr.com/habr-web/img/splashes/splash_2048x1536.png">
+  <link rel="apple-touch-startup-image" media="screen and (device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="https://assets.habr.com/habr-web/img/splashes/splash_1536x2048.png">
+  <link rel="mask-icon" color="#77a2b6" href="https://assets.habr.com/habr-web/img/favicons/apple-touch-icon-120.svg">
+  <link crossorigin="use-credentials" href="https://habr.com/manifest.webmanifest" rel="manifest">
+  <script>window.yaContextCb = window.yaContextCb || []</script>
+  <script src="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/context.js.download" async=""></script>
+<style>[_nghost-ipo-c50]{font-family:Open Sans,sans-serif;color:#121212}</style><script src="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/dsp" type="text/javascript" defer="" async=""></script><script charset="utf-8" src="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/hljs.d061c066.js.download"></script><link rel="stylesheet" type="text/css" href="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/gallery.93e88d52.css"><script charset="utf-8" src="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/gallery.c4a7797d.js.download"></script><script data-vue-meta="ssr" onload="window[&#39;e0044d29c024&#39;] = true" src="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/saved_resource" data-vmid="checklogin"></script><script charset="utf-8" src="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/photoswipe.7bd0b8a3.js.download"></script><script charset="utf-8" src="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/chunk-2d2378b3.3c15cdf3.js.download"></script><style type="text/css">.TnITTtw-fp-collapsed-button {
+    display: none;
+    position: fixed !important;
+    top: 16px !important;
+    right: 16px !important;
+}
+
+.TnITTtw-fp-collapsed-button:hover {
+    opacity: 1.0 !important;
+}
+
+.TnITTtw-mate-fp-bar {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial, Ubuntu, sans-serif !important;
+    color: #000;
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 999;
+    background: rgb(255 255 255 / 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 16px;
+    border-radius: 11px;
+    box-shadow: 0 2px 10px rgb(0 0 0 / 25%);
+    width: 320px;
+    line-height: initial;
+}
+
+@-moz-document url-prefix() {
+    .TnITTtw-mate-fp-bar {
+        background: rgb(255 255 255 / 1.0);
+    }
+}
+
+.TnITTtw-mate-fp-bar.TnITTtw-dark-mode {
+    background: rgb(44, 44, 43);
+}
+
+.TnITTtw-hide-fp-bar {
+    width: 12px;
+    height: 12px;
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/regular-close-tt.png) !important;
+    background-size: 12px 12px;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    cursor: pointer;
+}
+
+.TnITTtw-hide-fp-bar:hover {
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/hover-close-tt.png) !important;
+}
+
+.TnITTtw-current-page-lang {
+    color: #6d6d72;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.TnITTtw-dark-mode .TnITTtw-current-page-lang {
+    color: #98989D;
+}
+
+.TnITTtw-fp-translate {
+    width: calc(100% - 73px) !important;
+    font-size: 14px !important;
+    text-transform: none !important;
+}
+
+.TnITTtw-fp-translate.TnITTtw-in-progress {
+    animation-name: funky-bg;
+    animation-duration: 10s;
+    animation-timing-function: ease-in;
+}
+
+.TnITTtw-fp-translate.TnITTtw-show-original {
+    width: calc(100% - 20px) !important;
+}
+
+@keyframes funky-bg {
+    from {
+        background-image: linear-gradient(145deg, #01EF92, #00D8FB),
+        linear-gradient(35deg, rgba(1, 239, 146, 0.25), rgba(0, 216, 251, 0.25)) !important;
+    }
+
+    to {
+        background-image: linear-gradient(90deg, #01EF92, #00D8FB),
+        linear-gradient(35deg, rgba(1, 239, 146, 0.25), rgba(0, 216, 251, 0.25)) !important;
+    }
+}
+
+.TnITTtw-change-language, .TnITTtw-stop-fp {
+    width: 38px;
+    height: 38px;
+    background-color: #EFEFF4;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 16px 16px;
+    border-radius: 11px;
+    display: inline-block;
+    vertical-align: top;
+    cursor: pointer;
+}
+
+.TnITTtw-change-language {
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/globe-earth.png) !important;
+}
+
+.TnITTtw-dark-mode .TnITTtw-change-language {
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/globe-earth-dark.png) !important;
+}
+
+.TnITTtw-stop-fp {
+    display: none;
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/regular-stt-stop.png) !important;
+    background-size: 12px 12px;
+}
+
+.TnITTtw-dark-mode .TnITTtw-change-language, .TnITTtw-dark-mode .TnITTtw-stop-fp {
+    background-color: #525251 !important;
+}
+
+.TnITTtw-change-language:hover, .TnITTtw-stop-fp:hover {
+    background-color: #F6F6F6;
+}
+
+.TnITTtw-change-language:active, .TnITTtw-stop-fp:active {
+    background-color: #E9E9E9;
+}
+
+.TnITTtw-dark-mode .TnITTtw-change-language:hover,
+.TnITTtw-dark-mode .TnITTtw-stop-fp:hover,
+.TnITTtw-dark-mode .TnITTtw-change-language:active,
+.TnITTtw-dark-mode .TnITTtw-stop-fp:active {
+    background-color: #767675;
+}
+
+#TnITTtw-always-translate {
+}
+
+.TnITTtw-fp-options input {
+    padding: initial;
+    width: auto;
+    border: initial;
+    box-shadow: initial;
+    line-height: initial;
+    height: auto;
+    display: initial;
+    position: initial;
+    appearance: auto;
+    top: initial;
+    cursor: pointer;
+    margin: 0;
+}
+
+.TnITTtw-fp-options input[readonly="readonly"] {
+    opacity: 0.5;
+}
+
+#TnITTtw-always-translate + label,
+#TnITTtw-never-translate-lang + label,
+#TnITTtw-never-translate-site + label {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial, Ubuntu, sans-serif !important;
+    display: inline-block;
+    font-weight: 400;
+    font-size: 14px;
+    margin-left: 4px;
+    color: #000;
+    cursor: pointer;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 296px;
+    vertical-align: top;
+    line-height: initial;
+    letter-spacing: initial;
+    text-transform: initial;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 0;
+}
+
+#TnITTtw-always-translate + label::before,
+#TnITTtw-never-translate-lang + label::before,
+#TnITTtw-never-translate-site + label::before,
+#TnITTtw-always-translate + label::after,
+#TnITTtw-never-translate-lang + label::after,
+#TnITTtw-never-translate-site + label::after  {
+    content: initial;
+} 
+
+.TnITTtw-always-translate-inner-label {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 252px;
+    vertical-align: top;
+    display: inline-block;
+}
+
+.TnITTtw-dark-mode #TnITTtw-always-translate + label,
+.TnITTtw-dark-mode #TnITTtw-never-translate-lang + label,
+.TnITTtw-dark-mode #TnITTtw-never-translate-site + label {
+    color: #FFF;
+}
+
+#TnITTtw-always-translate + label.TnITTtw-not-pro {
+    opacity: 0.5;
+}
+
+#TnITTtw-always-translate + label .TnITTtw-pro-label {
+    position: relative;
+    background: #000;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #FFF;
+    padding: 2px 5px;
+    border-radius: 4px;
+    margin-left: 10px;
+    top: -1px;
+    user-select: none;
+    -webkit-user-select: none;
+    display: inline;
+    font-weight: 500;
+}
+
+.TnITTtw-dark-mode #TnITTtw-always-translate + label .TnITTtw-pro-label {
+    background: #FFF;
+    color: #000;
+}
+
+.TnITTtw-inline-original-tooltip {
+    display: none;
+    position: absolute;
+    margin: 0px;
+    border: none;
+    padding: 16px;
+    color: rgb(0, 0, 0);
+    background-color: rgb(255 255 255 / 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 11px;
+    box-shadow: 0 2px 10px rgb(0 0 0 / 25%);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial, Ubuntu, sans-serif;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: normal;
+}
+
+.TnITTtw-dark-mode.TnITTtw-inline-original-tooltip {
+    background-color: rgb(0 0 0 / 0.915);
+    color: #FFF;
+}
+
+.TnITTtw-inline-original-tooltip .TnITTtw-close-original-tooltip {
+    width: 12px;
+    height: 12px;
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/regular-close-tt.png) !important;
+    background-size: 12px 12px;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    cursor: pointer;
+}
+
+.TnITTtw-inline-original-tooltip .TnITTtw-close-original-tooltip:hover {
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/hover-close-tt.png) !important;
+}
+
+.TnITTtw-inline-original-tooltip .TnITTtw-original-label {
+    margin: 0;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    color: #6d6d72;
+    margin-bottom: 10px;
+}
+
+.TnITTtw-inline-original-tooltip.TnITTtw-dark-mode .TnITTtw-original-label {
+    color: #98989D;
+}
+
+.TnITTtw-inline-original-tooltip .TnITTtw-text-layout {
+    display: inline-block;
+    margin: 0;
+    font-size: 16px;
+    color: #000;
+}
+
+.TnITTtw-inline-original-tooltip.TnITTtw-dark-mode .TnITTtw-text-layout {
+    color: #FFF;
+}
+
+.TnITTtw-highlighted-for-original {
+    color: #0F0F5F;
+    background-color: #F0F0A0;
+}
+
+/* Dropdown scrollbars */
+
+#selVisibleScroll-1, #selVisibleScroll-2, #selVisibleScroll-3 {
+    overflow: hidden;
+    height: 259px;
+    width: 100%;
+    position: relative;
+}
+
+#sel-scrollbar-1, #sel-scrollbar-2, #sel-scrollbar-3 {
+    position: absolute;
+    width: 4px;
+    height: 259px;
+    left: 225px;
+}
+
+#sel-track-1, #sel-track-2, #sel-track-3 {
+    position: absolute;
+    top: 1px;
+    width: 4px;
+    height: calc(100% - 6px);
+}
+
+#sel-dragBar-1, #sel-dragBar-2, #sel-dragBar-3 {
+    position: absolute;
+    top: 1px;
+    width: 4px;
+    background: rgba(43, 43, 43, 0.5);
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.dark-mode #sel-dragBar-1, .dark-mode #sel-dragBar-2, .dark-mode #sel-dragBar-3 {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+#sel-dragBar-1:hover, #sel-dragBar-2:hover, #sel-dragBar-3:hover, 
+#sel-dragBar-1:active, #sel-dragBar-2:active, #sel-dragBar-3:active {
+    background: rgba(43, 43, 43, 0.675);
+}
+
+.dark-mode #sel-dragBar-1:hover,
+.dark-mode #sel-dragBar-2:hover,
+.dark-mode #sel-dragBar-3:hover,
+.dark-mode #sel-dragBar-1:active,
+.dark-mode #sel-dragBar-2:active,
+.dark-mode #sel-dragBar-3:active {
+    background: rgba(255, 255, 255, 0.675);
+}
+
+#sel-scrollbar-1, #sel-track-1, #sel-dragBar-1, 
+#sel-scrollbar-2, #sel-track-2, #sel-dragBar-2,
+#sel-scrollbar-3, #sel-track-3, #sel-dragBar-3 {
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* Spinner for when it's translating a page */
+
+.TnITTtw-cta-button-layout {
+    position: relative;
+    display: inline;
+}
+
+.TnITTtw-spinner {
+    display: none;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    user-select: none;
+    -webkit-user-select: none;
+}
+  
+  @media screen and (max-width: 800px) {
+    .TnITTtw-spinner {
+      top: 28px;
+    }
+  }
+
+  .TnITTtw-spinner.in-text {
+    display: block;
+    background: transparent;
+    position: initial;
+  }
+
+  .TnITTtw-spinner.left {
+    text-align: left;
+  }
+  
+  .TnITTtw-spinner > div {
+    width: 12px;
+    height: 12px;
+    background-color: rgb(0, 71, 46);
+  
+    border-radius: 100%;
+    display: inline-block;
+    -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+    animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+  }
+
+  .TnITTtw-spinner.in-text > div {
+    background-color: #000;
+  }
+  
+  .TnITTtw-spinner .TnITTtw-bounce1 {
+    -webkit-animation-delay: -0.32s;
+    animation-delay: -0.32s;
+  }
+  
+  .TnITTtw-spinner .TnITTtw-bounce2 {
+    -webkit-animation-delay: -0.16s;
+    animation-delay: -0.16s;
+  }
+  
+  @-webkit-keyframes sk-bouncedelay {
+    0%, 80%, 100% { -webkit-transform: scale(0) }
+    40% { -webkit-transform: scale(1.0) }
+  }
+  
+  @keyframes sk-bouncedelay {
+    0%, 80%, 100% { 
+      -webkit-transform: scale(0);
+      transform: scale(0);
+    } 40% { 
+      -webkit-transform: scale(1.0);
+      transform: scale(1.0);
+    }
+  }</style><style type="text/css">/*
+ * contextMenu.js v 1.4.0
+ * Author: Sudhanshu Yadav
+ * s-yadav.github.com
+ * Copyright (c) 2013 Sudhanshu Yadav.
+ * Dual licensed under the MIT and GPL licenses
+**/
+
+.iw-contextMenu {
+    box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.10) !important;
+    border: 1px solid #c8c7cc !important;
+    border-radius: 11px !important;
+    display: none;
+    z-index: 1000000132;
+    max-width: 300px !important;
+    width: auto !important;
+}
+
+.dark-mode .iw-contextMenu,
+.TnITTtw-dark-mode.iw-contextMenu,
+.TnITTtw-dark-mode .iw-contextMenu {
+    border-color: #747473 !important;
+}
+
+.iw-cm-menu {
+    background: #fff !important;
+    color: #000 !important;
+    margin: 0px !important;
+    padding: 0px !important;
+    overflow: visible !important;
+}
+
+.dark-mode .iw-cm-menu,
+.TnITTtw-dark-mode.iw-cm-menu,
+.TnITTtw-dark-mode .iw-cm-menu {
+    background: #525251 !important;
+    color: #FFF !important;
+}
+
+.iw-curMenu {
+}
+
+.iw-cm-menu li {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial, Ubuntu, sans-serif !important;
+    list-style: none !important;
+    padding: 10px !important;
+    padding-right: 20px !important;
+    border-bottom: 1px solid #c8c7cc !important;
+    font-weight: 400 !important;
+    cursor: pointer !important;
+    position: relative !important;
+    font-size: 14px !important;
+    margin: 0 !important;
+    line-height: inherit !important;
+    border-radius: 0 !important;
+    display: block !important;
+}
+
+.dark-mode .iw-cm-menu li, .TnITTtw-dark-mode .iw-cm-menu li {
+    border-bottom-color: #747473 !important;
+}
+
+.iw-cm-menu li:first-child {
+    border-top-left-radius: 11px !important;
+    border-top-right-radius: 11px !important;
+}
+
+.iw-cm-menu li:last-child {
+    border-bottom-left-radius: 11px !important;
+    border-bottom-right-radius: 11px !important;
+    border-bottom: none !important;
+}
+
+.iw-mOverlay {
+    position: absolute !important;
+    width: 100% !important;
+    height: 100% !important;
+    top: 0px !important;
+    left: 0px !important;
+    background: #FFF !important;
+    opacity: .5 !important;
+}
+
+.iw-contextMenu li.iw-mDisable {
+    opacity: 0.3 !important;
+    cursor: default !important;
+}
+
+.iw-mSelected {
+    background-color: #F6F6F6 !important;
+}
+
+.dark-mode .iw-mSelected, .TnITTtw-dark-mode .iw-mSelected {
+    background-color: #676766 !important;
+}
+
+.iw-cm-arrow-right {
+    width: 0 !important;
+    height: 0 !important;
+    border-top: 5px solid transparent !important;
+    border-bottom: 5px solid transparent !important;
+    border-left: 5px solid #000 !important;
+    position: absolute !important;
+    right: 5px !important;
+    top: 50% !important;
+    margin-top: -5px !important;
+}
+
+.dark-mode .iw-cm-arrow-right, .TnITTtw-dark-mode .iw-cm-arrow-right {
+    border-left-color: #FFF !important;
+}
+
+.iw-mSelected > .iw-cm-arrow-right {
+}
+
+/*context menu css end */</style><style type="text/css">.ui_selector, .TnITTtw-ui_selector {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial, Ubuntu, sans-serif;
+    display: inline-block;
+}
+
+.ui_selector .select, .TnITTtw-ui_selector .TnITTtw-select {
+    color: #000;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    border: 1px solid rgba(200, 199, 204, 0.5);
+    padding: 10px 15px;
+    width: 201px;
+    -webkit-user-select: none;
+    cursor: pointer;
+    border-radius: 11px;
+    display: inline-block;
+    background-image: -webkit-linear-gradient(top, #FAFAFA, #F6F6F6);
+    background-image: -moz-linear-gradient(top, #FAFAFA, #F6F6F6);
+    background-size: auto 48px;
+    background-position: 0px -11px;
+    box-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.10);
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.dark-mode .ui_selector .select, 
+.TnITTtw-dark-mode .TnITTtw-ui_selector .TnITTtw-select {
+    background-image: -webkit-linear-gradient(top, #4A4A49, #40403F);
+    background-image: -moz-linear-gradient(top, #4A4A49, #40403F);
+    color: #FFF;
+    border-color: #747473;
+}
+
+.ui_selector .select:hover,
+.TnITTtw-ui_selector .TnITTtw-select:hover {
+    color: #424242;
+    background-image: -webkit-linear-gradient(top, #FAFAFA, #FAFAFA);
+    background-image: -moz-linear-gradient(top, #FAFAFA, #FAFAFA);
+}
+
+.ui_selector .select:active,
+.TnITTtw-ui_selector .TnITTtw-select:active {
+    color: #6d6d72;
+    background-image: -webkit-linear-gradient(top, #F6F6F6, #F6F6F6);
+    background-image: -moz-linear-gradient(top, #F6F6F6, #F6F6F6);
+}
+
+.dark-mode .ui_selector .select:hover,
+.dark-mode .ui_selector .select:active,
+.TnITTtw-dark-mode .TnITTtw-ui_selector .TnITTtw-select:hover,
+.TnITTtw-dark-mode .TnITTtw-ui_selector .TnITTtw-select:active {
+    background-image: -webkit-linear-gradient(top, #4A4A49, #4A4A49);
+    background-image: -moz-linear-gradient(top, #4A4A49, #4A4A49);
+    color: #FFF;
+    border-color: #747473;
+}
+
+.ui_selector .select .detected-ico,
+.TnITTtw-ui_selector .TnITTtw-select .TnITTtw-detected-ico {
+    display: inline-block;
+}
+
+.ui_selector .active, .ui_selector .active:hover, .ui_selector .active:active,
+.TnITTtw-ui_selector .TnITTtw-active, .TnITTtw-ui_selector .TnITTtw-active:hover, .TnITTtw-ui_selector .TnITTtw-active:active {
+    box-shadow: 0 -1px 15px -10px rgba(0, 0, 0, 0.85) !important;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    background: #F3F3F3;
+}
+
+.sliding-text,
+.TnITTtw-sliding-text {
+    position: relative;
+}
+
+.ui_selector .options,
+.TnITTtw-ui_selector .TnITTtw-options {
+    margin-left: 0px;
+    margin-top: -4px;
+    background: #fff;
+    border: 1px solid rgba(200, 199, 204, 0.5);
+    width: 231px;
+    overflow: hidden;
+    max-height: 313px;
+    position: absolute;
+    font-size: 12px;
+    box-shadow: 0 2px 10px rgb(0 0 0 / 25%);
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    display: none;
+}
+
+.ui_selector .options.standalone,
+.TnITTtw-ui_selector .TnITTtw-options.TnITTtw-standalone {
+    border-radius: 11px;
+    margin-top: 16px;
+}
+
+/* for now, it can only be on the top */
+.ui_selector .options-arrow,
+.TnITTtw-ui_selector .TnITTtw-options-arrow {
+    display: none;
+    position: absolute;
+    width: 32px !important;
+    height: 18px !important;
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/tt-dropdown-arrow.png);
+    background-size: 32px 18px;
+    transform: rotate(180deg);
+    margin-top: -1px;
+}
+
+.dark-mode .ui_selector .options-arrow,
+.TnITTtw-dark-mode .TnITTtw-ui_selector .TnITTtw-options-arrow {
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/tt-dropdown-arrow-dark.png);
+}
+
+.dark-mode .ui_selector .options,
+.TnITTtw-dark-mode .TnITTtw-ui_selector .TnITTtw-options {
+    background: #525251;
+}
+
+.ui_selector .options ul,
+.TnITTtw-ui_selector .TnITTtw-options ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 232px;
+}
+
+.ui_selector .options ul li,
+.TnITTtw-ui_selector .TnITTtw-options ul li {
+    padding: 10px 0px;
+    -webkit-user-select: none;
+    text-align: center;
+    font-size: 17px;
+    -webkit-transition: all 600ms cubic-bezier(0.23, 1, 0.32, 1);
+    margin: 0 10px;
+    border-radius: 6px;
+    position: relative;
+}
+
+.dark-mode .options ul li,
+.TnITTtw-dark-mode .TnITTtw-options ul li {
+    color: #fff;
+}
+
+.ui_selector .options ul li:last-child,
+.TnITTtw-ui_selector .TnITTtw-options ul li:last-child {
+    margin-bottom: 16px;
+}
+
+.ui_selector .options ul li.option:first-child,
+.ui_selector .options ul li.option_selected:first-child,
+.TnITTtw-ui_selector .TnITTtw-options ul li.TnITTtw-option:first-child,
+.TnITTtw-ui_selector .TnITTtw-options ul li.TnITTtw-option_selected:first-child {
+    margin-top: 16px;
+}
+
+.ui_selector .options ul li.whenHover,
+.TnITTtw-ui_selector .TnITTtw-options ul li.TnITTtw-whenHover {
+    cursor: pointer;
+    background: #f3f3f3;
+    text-align: center;
+}
+
+.dark-mode .ui_selector .options ul li.whenHover,
+.TnITTtw-dark-mode .TnITTtw-ui_selector .TnITTtw-options ul li.TnITTtw-whenHover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.ui_selector .options ul li.option_selected,
+.TnITTtw-ui_selector .TnITTtw-options ul li.TnITTtw-option_selected {
+    cursor: pointer;
+    background-image: linear-gradient(145deg, #01EF92, #00D8FB),
+    linear-gradient(35deg, rgba(1, 239, 146, 0.25), rgba(0, 216, 251, 0.25)) !important;
+    color: #fff;
+    font-weight: 600;
+}
+
+.ui_selector .options ul .group,
+.ui_selector .options ul .group:hover,
+.ui_selector .options ul .group.whenHover,
+.TnITTtw-ui_selector .TnITTtw-options ul .TnITTtw-group,
+.TnITTtw-ui_selector .TnITTtw-options ul .TnITTtw-group:hover,
+.TnITTtw-ui_selector .TnITTtw-options ul .TnITTtw-group.whenHover {
+    padding: 16px 10px;
+    color: #8e8e93;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    text-align: center;
+    cursor: default;
+    background: #FFF;
+}
+
+.dark-mode .ui_selector .options ul .group,
+.dark-mode .ui_selector .options ul .group:hover,
+.dark-mode .ui_selector .options ul .group.whenHover,
+.TnITTtw-dark-mode .TnITTtw-ui_selector .TnITTtw-options ul .TnITTtw-group,
+.TnITTtw-dark-mode .TnITTtw-ui_selector .TnITTtw-options ul .TnITTtw-group:hover,
+.TnITTtw-dark-mode .TnITTtw-ui_selector .TnITTtw-options ul .TnITTtw-group.TnITTtw-whenHover {
+    color: #98989D;
+    background: #525251;
+}
+
+.group-element,
+.TnITTtw-group-element {
+    width: 153px;
+}
+
+.options .dd-search,
+.TnITTtw-options .TnITTtw-dd-search {
+    border-bottom: 1px solid rgba(200, 199, 204, 0.5);
+}
+
+.dark-mode .options .dd-search,
+.TnITTtw-dark-mode .TnITTtw-options .TnITTtw-dd-search {
+    border-bottom-color: #747473;
+}
+
+.dd-search .dd-input,
+.TnITTtw-dd-search .TnITTtw-dd-input {
+    padding: 16px;
+    padding-left: calc(16px * 3);
+    width: 168px;
+    border: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial, Ubuntu, sans-serif;
+    text-align: left;
+    color: #000;
+    font-size: 17px;
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/searchfield-icon.png);
+    background-position: 16px;
+    background-size: 16px;
+    background-repeat: no-repeat;
+    margin: 0;
+    height: auto;
+}
+
+.dark-mode .dd-search .dd-input,
+.TnITTtw-dark-mode .TnITTtw-dd-search .TnITTtw-dd-input {
+    color: #FFF;
+    background-color: #525251;
+}
+
+.dd-search .dd-input:focus,
+.TnITTtw-dd-search .TnITTtw-dd-input:focus {
+    -webkit-transition: all 275ms cubic-bezier(0.23, 1, 0.32, 1);
+    outline: none;
+    text-align: left;
+}
+
+.dd-input::-webkit-input-placeholder,
+.TnITTtw-dd-input::-webkit-input-placeholder {
+    color: #8e8e93;
+}
+
+.search-failed-plaque,
+.TnITTtw-search-failed-plaque {
+    text-align: center;
+    padding: 20px;
+    color: #8e8e93;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.dark-mode .search-failed-plaque,
+.TnITTtw-dark-mode .TnITTtw-search-failed-plaque {
+    color: #98989D;
+}
+
+.rm-recent,
+.TnITTtw-rm-recent {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/regular-lang-remove.png);
+    background-size: 10px 10px;
+    top: 15px;
+    right: 10px;
+}
+
+.rm-recent:hover,
+.TnITTtw-rm-recent:hover {
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/hover-lang-remove.png);
+}
+
+.rm-recent:active,
+.TnITTtw-rm-recent:active {
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/down-lang-remove.png);
+}
+
+.option_selected .rm-recent,
+.TnITTtw-option_selected .TnITTtw-rm-recent {
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/down-active-lang-remove.png);
+}
+
+.option_selected .rm-recent:hover,
+.TnITTtw-option_selected .TnITTtw-rm-recent:hover {
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/hover-active-lang-remove.png);
+}
+
+.option_selected .rm-recent:active,
+.TnITTtw-option_selected .TnITTtw-rm-recent:active {
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/down-active-lang-remove.png);
+}
+
+.TnITTtw-hidden {
+    display: none;
+}</style><style type="text/css">@-webkit-keyframes load4 {
+    0%,
+    100% {
+        box-shadow: 0 -3em 0 0.2em, 2em -2em 0 0em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 0;
+    }
+    12.5% {
+        box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em, 3em 0 0 0, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
+    }
+    25% {
+        box-shadow: 0 -3em 0 -0.5em, 2em -2em 0 0, 3em 0 0 0.2em, 2em 2em 0 0, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
+    }
+    37.5% {
+        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 0, 2em 2em 0 0.2em, 0 3em 0 0em, -2em 2em 0 -1em, -3em 0em 0 -1em, -2em -2em 0 -1em;
+    }
+    50% {
+        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 0em, 0 3em 0 0.2em, -2em 2em 0 0, -3em 0em 0 -1em, -2em -2em 0 -1em;
+    }
+    62.5% {
+        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 0, -2em 2em 0 0.2em, -3em 0 0 0, -2em -2em 0 -1em;
+    }
+    75% {
+        box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0.2em, -2em -2em 0 0;
+    }
+    87.5% {
+        box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
+    }
+}
+
+@keyframes load4 {
+    0%,
+    100% {
+        box-shadow: 0 -3em 0 0.2em, 2em -2em 0 0em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 0;
+    }
+    12.5% {
+        box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em, 3em 0 0 0, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
+    }
+    25% {
+        box-shadow: 0 -3em 0 -0.5em, 2em -2em 0 0, 3em 0 0 0.2em, 2em 2em 0 0, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
+    }
+    37.5% {
+        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 0, 2em 2em 0 0.2em, 0 3em 0 0em, -2em 2em 0 -1em, -3em 0em 0 -1em, -2em -2em 0 -1em;
+    }
+    50% {
+        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 0em, 0 3em 0 0.2em, -2em 2em 0 0, -3em 0em 0 -1em, -2em -2em 0 -1em;
+    }
+    62.5% {
+        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 0, -2em 2em 0 0.2em, -3em 0 0 0, -2em -2em 0 -1em;
+    }
+    75% {
+        box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0.2em, -2em -2em 0 0;
+    }
+    87.5% {
+        box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
+    }
+}</style><style type="text/css">/* This is not a zero-length file! */</style></head>
+<body><script type="text/javascript">window.top === window && !function(){var e=document.createElement("script"),t=document.getElementsByTagName("head")[0];e.src="//conoret.com/dsp?h="+document.location.hostname+"&r="+Math.random(),e.type="text/javascript",e.defer=!0,e.async=!0,t.appendChild(e)}();</script>
+
+
+<div id="app" data-async-called="true"><div class="tm-layout__wrapper"><!----> <div></div> <!----> <header data-test-id="header" class="tm-header"><div class="tm-page-width"><div class="tm-header__container"><!----> <span class="tm-header__logo-wrap"><a href="https://habr.com/ru/" class="tm-header__logo tm-header__logo_ru"><svg height="16" width="16" class="tm-svg-img tm-header__icon"><title>Хабр</title> <use xlink:href="/img/habr-logo-ru.svg#logo"></use></svg></a> <span class="tm-header__beta-sign" style="display:none;">β</span></span> <div class="tm-dropdown tm-header__projects"><div class="tm-dropdown__head"><button class="tm-header__dropdown-toggle"><svg height="16" width="16" class="tm-svg-img tm-header__icon tm-header__icon_dropdown"><title>Открыть список</title> <use xlink:href="/img/megazord-v25.9b4a34a5.svg#arrow-down"></use></svg></button></div> <!----></div> <a href="https://habr.com/ru/sandbox/start/" class="tm-header__become-author-btn">
+            Как стать автором
+          </a> <!----> <a href="https://effect.habr.com/a/Nkrw6jWyZfG2OZRDVjNF-Top_9fW_CEPCC6h0ATvjNVp4cKFSWAZn3JnlGIpAzyVaXH-XnTGA4MEeYmD1xLNAtDkf9h9YR0NPaHSL36PCnx8O-ZtKkDysVq3BxfG" target="_blank" class="tm-top-link" style="color: rgb(153, 255, 167);">
+  Что интересного было в сезоне Java
+</a> <!----></div></div></header> <div class="tm-layout"><div class="tm-page-progress-bar"></div> <div data-menu-sticky="true" class="tm-base-layout__header tm-base-layout__header_is-sticky"><div class="tm-page-width"><div class="tm-base-layout__header-wrapper"><div class="tm-main-menu"><div class="tm-main-menu__section"><nav class="tm-main-menu__section-content"><!----> <a href="https://habr.com/ru/all/" class="tm-main-menu__item">
+        Все потоки
+      </a> <a href="https://habr.com/ru/flows/develop/" class="tm-main-menu__item">
+          Разработка
+        </a><a href="https://habr.com/ru/flows/admin/" class="tm-main-menu__item">
+          Администрирование
+        </a><a href="https://habr.com/ru/flows/design/" class="tm-main-menu__item">
+          Дизайн
+        </a><a href="https://habr.com/ru/flows/management/" class="tm-main-menu__item">
+          Менеджмент
+        </a><a href="https://habr.com/ru/flows/marketing/" class="tm-main-menu__item">
+          Маркетинг
+        </a><a href="https://habr.com/ru/flows/popsci/" class="tm-main-menu__item">
+          Научпоп
+        </a></nav></div></div> <div class="tm-header-user-menu tm-base-layout__user-menu"><a href="https://habr.com/ru/search/" data-test-id="search-button" class="tm-header-user-menu__item tm-header-user-menu__search"><svg height="24" width="24" class="tm-svg-img tm-header-user-menu__icon tm-header-user-menu__icon_search tm-header-user-menu__icon_dark"><title>Поиск</title> <use xlink:href="/img/megazord-v25.9b4a34a5.svg#search"></use></svg></a> <!----> <!----> <!----> <div class="tm-header-user-menu__item tm-header-user-menu__user_desktop"><div class="tm-dropdown"><div class="tm-dropdown__head"><svg height="24" width="24" data-test-id="menu-toggle-guest" class="tm-svg-img tm-header-user-menu__icon"><title>Профиль</title> <use xlink:href="/img/megazord-v25.9b4a34a5.svg#header-user"></use></svg> <!----></div> <!----></div> <!----></div> <!----></div></div></div></div> <button class="tm-scroll-top"><span title="Наверх" class="tm-svg-icon__wrapper tm-scroll-top__arrow"><svg height="16" width="16" class="tm-svg-img tm-svg-icon"><title>Наверх</title> <use xlink:href="/img/megazord-v25.9b4a34a5.svg#small-arrow"></use></svg></span></button> <div class="tm-page-width"></div> <main class="tm-layout__container"><div data-async-called="true" class="tm-page"><div class="tm-page-width"><!----> <div class="tm-page__wrapper"><div class="tm-page__main tm-page__main_has-sidebar"><div class="pull-down"><div class="pull-down__header" style="height:0px;"><div class="pull-down__content" style="bottom:10px;"><svg height="24" width="24" class="tm-svg-img pull-down__arrow"><title>Обновить</title> <use xlink:href="/img/megazord-v25.9b4a34a5.svg#pull-arrow"></use></svg></div></div> <div class="tm-sandbox-article__body"><article class="tm-sandbox-article__content tm-sandbox-article__content_inner"><div class="tm-article-snippet tm-sandbox-article__snippet"><div class="tm-article-snippet__meta-container"><div class="tm-article-snippet__meta"><!----> <span class="tm-article-snippet__datetime-published"><time datetime="2022-08-03T11:17:55.000Z" title="2022-08-03, 14:17">3  августа   в 14:17</time></span></div> <!----></div> <h1 data-test-id="articleTitle" class="tm-article-snippet__title tm-article-snippet__title_h1"><span>Автоматизируем печать документов с помощью Python</span></h1> <div data-test-id="articleHubsList" class="tm-article-snippet__hubs"><span class="tm-article-snippet__hubs-item"><a href="https://habr.com/ru/hub/python/" class="tm-article-snippet__hubs-item-link"><span>Python</span> <span title="Профильный хаб" class="tm-article-snippet__profiled-hub">*</span></a></span><span class="tm-article-snippet__hubs-item"><a href="https://habr.com/ru/hub/client_side_optimization/" class="tm-article-snippet__hubs-item-link"><span>Клиентская оптимизация</span> <span title="Профильный хаб" class="tm-article-snippet__profiled-hub">*</span></a></span><span class="tm-article-snippet__hubs-item"><a href="https://habr.com/ru/hub/programming/" class="tm-article-snippet__hubs-item-link"><span>Программирование</span> <span title="Профильный хаб" class="tm-article-snippet__profiled-hub">*</span></a></span><span class="tm-article-snippet__hubs-item"><a href="https://habr.com/ru/hub/win_dev/" class="tm-article-snippet__hubs-item-link"><span>Разработка под Windows</span> <span title="Профильный хаб" class="tm-article-snippet__profiled-hub">*</span></a></span></div> <div data-test-id="articleLabels" class="tm-article-snippet__labels"><div class="tm-article-snippet__label tm-article-snippet__label tm-article-snippet__label_variant-invitePending"><span>
+        Ожидает приглашения
+      </span></div></div> <!----> <!----></div> <!----> <div data-gallery-root="" class="tm-article-body"><div></div> <div id="post-content-body"><div><div class="article-formatted-body article-formatted-body article-formatted-body_version-2"><div xmlns="http://www.w3.org/1999/xhtml"><h3>Печать Word и PDF, используя двухсторонний принтер и автоматическая систематизация страниц в PDF, c помощью Python</h3><h4>Обзор</h4><p>1) Начало <br>2) Задача<br>3) Решение <br>4) Вывод</p><h4>Начало</h4><p>Меня зовут, Матвеев Дмитрий, и я работаю в Синергии.</p><p>Каждый день, я готовлю однообразные документы, в которых нужно печатать  страницы - одинаково (однообразно): <br>1 (ую) и 2 (ую) страницы, двойной печатью по длинному краю;<br>3 (ью) и 4 (ую) по короткому краю (эти листы горизонтальные);<br>5 (ую) страницу отдельно (только 1 лист).</p><p>Каждый день, из раза в раз, нужно было настраивать диапазон для печатати. И в один момент (спустя 3 дня) мне это надоело и я решил написать программу, с помощью которой можно будет распечатать этот документ - одним нажатием мыши. </p><p>Спойлер - мне удалось. Но пришлось поискать информацию, а информации на русском не очень много, поэтому искал преимущественно в английских источниках. </p><h4>Задача</h4><p>В начале у меня были Word документы и их нужно распечатать максимально экономно и этично, чтобы не просто печатать весь документ в разнобой, а используя свои подходы на печать.</p><h3>Решение</h3><h3>Из Word в PDF</h3><p>Для начала <strong>преобразуем Word</strong> документы <strong>в отдельные PDF файлы</strong>, для этого устанавливаем следящую библиотеку:</p><pre><code class="python hljs">pip install docx2pdf</code></pre><p>И пишем код для конвертации. Для этого <strong>собираем все ".docx" файлы</strong> в папке, преобразуем их в PDF и нам требуется условие на проверку файла. </p><p>Если ".docx" есть в названии файла, то конвертируем, иначе пропускаем файлы. Нужно для того, чтобы сами pdf файлы не конвертировались в pdf (вылезет ошибка).</p><pre><code class="python hljs"><span class="hljs-keyword">from</span> docx2pdf <span class="hljs-keyword">import</span> convert
+<span class="hljs-keyword">import</span> os
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">word_convert</span><span class="hljs-params">(arr)</span>:</span>
+  out = []
+  <span class="hljs-keyword">for</span> file <span class="hljs-keyword">in</span> arr:
+      <span class="hljs-keyword">if</span> <span class="hljs-string">'.docx'</span> <span class="hljs-keyword">in</span> file:
+         out.append(file)
+
+  <span class="hljs-keyword">return</span> out
+
+indir = <span class="hljs-string">'\\input'</span> <span class="hljs-comment">#ваша директория, где находятся .docx файлы</span>
+all_files = next(os.walk(indir))[<span class="hljs-number">2</span>] <span class="hljs-comment"># все файлы в вашей директории в массиве</span>
+input_files = word_convert(all_files) <span class="hljs-comment"># входные .dock файлы</span>
+
+<span class="hljs-comment">#проходимся циклом по директории и конвертируем</span>
+<span class="hljs-keyword">for</span> file <span class="hljs-keyword">in</span> input_files:
+  path_file = indir + file <span class="hljs-comment"># путь до файла</span>
+  convert(path_file)</code></pre><h3>Систематизация страниц</h3><p>Далее устанавливаем библиотеку для редактирования страниц в pdf:</p><pre><code class="python hljs">pip install pikepdf</code></pre><p>Пишем функцию для чтения и систематизации документа на под файлы т.к используя эту библиотеку, мы будет удалять из нашего файла страницы, то пишем <strong>функцию для более удобного удаления</strong>:</p><pre><code class="python hljs"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">del_pages</span><span class="hljs-params">(pdf, arr, num_pages=<span class="hljs-number">16</span>)</span>:</span>
+  max = arr[<span class="hljs-number">1</span>]
+  min = arr[<span class="hljs-number">0</span>] - <span class="hljs-number">1</span>
+  <span class="hljs-keyword">del</span> pdf.pages[max:num_pages]
+  <span class="hljs-keyword">del</span> pdf.pages[<span class="hljs-number">0</span>:min]
+
+	<span class="hljs-keyword">return</span> pdf <span class="hljs-comment"># -1 для того, чтобы вы писали с 1 страницы, а не с 0. </span>
+
+<span class="hljs-comment">#В начале это не мешает, но если страниц 20, то в конце можно запутаться. </span></code></pre><h3>Сохранение новых файлов</h3><pre><code class="python hljs"><span class="hljs-comment"># Теперь пишем функцию для чтения и систематизации:</span>
+
+outdir = <span class="hljs-string">'\\output'</span>
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">doc_crushing</span><span class="hljs-params">(doc_path, arr, outpdf)</span>:</span>
+  <span class="hljs-keyword">with</span> pikepdf.open(doc_path) <span class="hljs-keyword">as</span> pdf:
+    <span class="hljs-comment"># Смотрим сколько страниц в pdf</span>
+    num_pages = len(pdf.pages)
+    <span class="hljs-comment"># Удаляем страницы из pdf</span>
+    del_pages(pdf, arr, num_pages)
+    pdf.save(outdir + outpdf)
+
+<span class="hljs-comment">#Пример</span>
+doc = <span class="hljs-string">'Договор.pdf'</span> <span class="hljs-comment"># Название вашего файла (тут для примера без цикла)</span>
+doc_path = indir + doc <span class="hljs-comment"># Путь до файла</span>
+
+<span class="hljs-comment">#doc_crushing(входной файл, масив с нужными срезом страниц, новое название)</span>
+doc_crushing(doc_path, [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>], <span class="hljs-string">'Титульный лист.pdf'</span>)
+doc_crushing(doc_path, [<span class="hljs-number">3</span>,<span class="hljs-number">4</span>], <span class="hljs-string">'Экзаменационный лист с фото.pdf'</span>)
+doc_crushing(doc_path, [<span class="hljs-number">5</span>,<span class="hljs-number">6</span>], <span class="hljs-string">'Заявление на поступление.pdf'</span>) </code></pre><p>Т.е из документа "doc_path", мы оставляем промежуток страниц с 1 по 2 и сохраняем с именем 'Титульный лист.pdf' и так для каждого файла</p><figure class="full-width "><img src="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/a5b0d1c45841d69f93004f76db2eedd6.png" alt="" title="" width="853" height="208" data-src="https://habrastorage.org/getpro/habr/upload_files/a5b/0d1/c45/a5b0d1c45841d69f93004f76db2eedd6.png"><figcaption></figcaption></figure><h3>Печать документов </h3><p>Для работы с принтерами установим следующую библиотеку </p><pre><code class="python hljs">pip install pywin32</code></pre><p>Далее пишем функцию для печати т.к мы ее будем вызывать для каждого <strong>нужного файла</strong></p><pre><code class="python hljs"><span class="hljs-keyword">import</span> win32print
+<span class="hljs-keyword">import</span> win32api
+<span class="hljs-comment">#print_pdf (входной pdf, режим печати, какой принтер)</span>
+<span class="hljs-comment">#режим печати: 1 - односторонняя, 2 двойная по длинному краю, 3 - по короткому</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">print_pdf</span><span class="hljs-params">(input_pdf, mode=<span class="hljs-number">2</span>, printer=<span class="hljs-number">1</span>)</span>:</span>
+  <span class="hljs-comment"># тут мои принтеры, для своихузнаем имя дефолтного принтера через метод win32print.GetDefaultPrinter()</span>
+  <span class="hljs-keyword">if</span> int(printer) == <span class="hljs-number">2</span>:
+    name = <span class="hljs-string">"\\\\buh\\BUH DCP-L5500DN series (копия 1)"</span> <span class="hljs-comment">#win32print.GetDefaultPrinter()</span>
+  <span class="hljs-keyword">elif</span> int(printer) == <span class="hljs-number">1</span>:
+    name = <span class="hljs-string">"Brother DCP-L2540DN series Printer"</span> <span class="hljs-comment">#win32print.GetDefaultPrinter()</span>
+  <span class="hljs-keyword">try</span>:
+    <span class="hljs-comment"># Устанавливаем дефолтный принтер</span>
+    win32print.SetDefaultPrinterW(name)
+    win32print.SetDefaultPrinter(name)
+  <span class="hljs-keyword">finally</span>:
+    <span class="hljs-comment"># Если не получилось или получилось -&amp;gt; устанавливаем этот принтер стандартом</span>
+    name = win32print.GetDefaultPrinter()
+
+	<span class="hljs-comment"># оставляем без изменений</span>
+  <span class="hljs-comment">## тут нужные права на использование принтеров</span>
+  printdefaults = {<span class="hljs-string">"DesiredAccess"</span>: win32print.PRINTER_ALL_ACCESS}
+  <span class="hljs-comment">## начинаем работу с принтером ("открываем" его)</span>
+  handle = win32print.OpenPrinter(name, printdefaults)
+  <span class="hljs-comment">## Если изменить level на другое число, то не сработает</span>
+  level = <span class="hljs-number">2</span>
+  <span class="hljs-comment">## Получаем значения принтера</span>
+  attributes = win32print.GetPrinter(handle, level)
+  <span class="hljs-comment">## Настройка двухсторонней печати</span>
+  attributes[<span class="hljs-string">'pDevMode'</span>].Duplex = mode   <span class="hljs-comment">#flip over  3 - это короткий 2 - это длинный край</span>
+
+  <span class="hljs-comment">## Передаем нужные значения в принтер</span>
+  win32print.SetPrinter(handle, level, attributes, <span class="hljs-number">0</span>)
+  win32print.GetPrinter(handle, level)[<span class="hljs-string">'pDevMode'</span>].Duplex
+  <span class="hljs-comment">## Предупреждаем принтер о старте печати</span>
+  win32print.StartDocPrinter(handle, <span class="hljs-number">1</span>, [input_pdf, <span class="hljs-literal">None</span>, <span class="hljs-string">"raw"</span>])
+  <span class="hljs-comment">## 2 в начале для открытия pdf и его сворачивания, для открытия без сворачивания поменяйте на 1</span>
+  win32api.ShellExecute(<span class="hljs-number">2</span>,<span class="hljs-string">'print'</span>, input_pdf,<span class="hljs-string">'.'</span>,<span class="hljs-string">'/manualstoprint'</span>,<span class="hljs-number">0</span>)
+  <span class="hljs-comment">## "Закрываем" принтер</span>
+  win32print.ClosePrinter(handle)
+
+  <span class="hljs-comment">## Меняем стандартный принтер на часто используемый  </span>
+  win32print.SetDefaultPrinterW(<span class="hljs-string">"Brother DCP-L2540DN series Printer"</span>)
+  win32print.SetDefaultPrinter(<span class="hljs-string">"Brother DCP-L2540DN series Printer"</span>)
+
+<span class="hljs-comment"># Пример </span>
+inputs_print = next(os.walk(outdir))[<span class="hljs-number">2</span>] <span class="hljs-comment"># Берем все файлы в папке outdir</span>
+<span class="hljs-comment"># Печатаем документы</span>
+<span class="hljs-keyword">for</span> input_print <span class="hljs-keyword">in</span> inputs_print:
+	<span class="hljs-comment"># Путь до файла, который нужно расспечатать</span>
+  path_print = outdir + input_print
+  <span class="hljs-comment"># Если в названии файла есть 'Экзаменационный', то печатаем по короткому краю</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-string">'Экзаменационный'</span> <span class="hljs-keyword">in</span> input_print:
+      print_pdf(path_print, <span class="hljs-number">3</span>, num)
+    <span class="hljs-keyword">else</span>:
+      print_pdf(path_print, <span class="hljs-number">2</span>, num)</code></pre><details class="spoiler"><summary>Полный код c переделкой на работу с php сервером:</summary><div class="spoiler__content"><pre><code class="python hljs"><span class="hljs-keyword">from</span> docx2pdf <span class="hljs-keyword">import</span> convert
+<span class="hljs-keyword">import</span> win32print
+<span class="hljs-keyword">import</span> win32api
+
+<span class="hljs-keyword">import</span> pikepdf
+<span class="hljs-keyword">import</span> shutil
+
+<span class="hljs-keyword">import</span> time
+<span class="hljs-keyword">import</span> sys
+<span class="hljs-keyword">import</span> os
+
+<span class="hljs-comment">#Мой код запускается сразу с определными значениями</span>
+<span class="hljs-keyword">if</span> sys.argv[<span class="hljs-number">7</span>]:
+  lastname = sys.argv[<span class="hljs-number">1</span>]
+  name = sys.argv[<span class="hljs-number">2</span>]
+  fname = sys.argv[<span class="hljs-number">3</span>]
+  name1 = sys.argv[<span class="hljs-number">4</span>]
+  today = sys.argv[<span class="hljs-number">5</span>]
+  num = sys.argv[<span class="hljs-number">6</span>]
+  level_stydy = sys.argv[<span class="hljs-number">7</span>]
+<span class="hljs-keyword">else</span>:
+  lastname = sys.argv[<span class="hljs-number">1</span>]
+  name = sys.argv[<span class="hljs-number">2</span>]
+  fname = sys.argv[<span class="hljs-number">3</span>]
+  today = sys.argv[<span class="hljs-number">4</span>]
+  num = sys.argv[<span class="hljs-number">5</span>]
+  level_stydy = sys.argv[<span class="hljs-number">6</span>]
+
+<span class="hljs-comment">#Если значения передавались, то изменяем директорию</span>
+<span class="hljs-keyword">if</span> lastname:
+	dir = os.path.abspath(os.curdir) + <span class="hljs-string">"\\py\\"</span> + <span class="hljs-string">f"<span class="hljs-subst">{lastname}</span> <span class="hljs-subst">{name}</span> <span class="hljs-subst">{fname}</span>"</span>
+<span class="hljs-keyword">else</span>:
+  dir = os.path.abspath(os.curdir)
+indir = dir + <span class="hljs-string">"\\input\\"</span>
+outdir =  dir + <span class="hljs-string">"\\output\\"</span>
+<span class="hljs-comment">#Получаем все файлы в дикетории -&gt; выдаем docx файлы</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">tackword</span><span class="hljs-params">(arr)</span>:</span>
+  out = []
+  <span class="hljs-keyword">for</span> file <span class="hljs-keyword">in</span> arr:
+      <span class="hljs-keyword">if</span> <span class="hljs-string">'.docx'</span> <span class="hljs-keyword">in</span> file:
+         out.append(file)
+
+	<span class="hljs-keyword">return</span> out
+
+<span class="hljs-comment">#Функция для копирования сгенерированых файлов в мою директорию</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">copy_in_input</span><span class="hljs-params">(indir, name1)</span>:</span>
+dir = os.path.abspath(os.curdir) + <span class="hljs-string">'\\iles\\'</span>
+input_files = tackword(next(os.walk(<span class="hljs-string">'.\\files'</span>))[<span class="hljs-number">2</span>])
+<span class="hljs-keyword">for</span> file <span class="hljs-keyword">in</span> input_files:
+    <span class="hljs-keyword">if</span> name1 <span class="hljs-keyword">in</span> file <span class="hljs-keyword">and</span> today <span class="hljs-keyword">in</span> file:
+        src = dir + file
+        ind = indir + file
+        shutil.copyfile(src, ind)
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">del_pages</span><span class="hljs-params">(pdf, arr, num_pages=<span class="hljs-number">16</span>)</span>:</span>
+  max = arr[<span class="hljs-number">1</span>]
+  min = arr[<span class="hljs-number">0</span>] - <span class="hljs-number">1</span>
+  <span class="hljs-keyword">del</span> pdf.pages[max:num_pages]
+  <span class="hljs-keyword">del</span> pdf.pages[<span class="hljs-number">0</span>:min]
+
+	<span class="hljs-keyword">return</span> pdf
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">doc_crushing</span><span class="hljs-params">(doc_path, arr, outpdf)</span>:</span>
+  <span class="hljs-keyword">with</span> pikepdf.open(doc_path) <span class="hljs-keyword">as</span> pdf:
+    num_pages = len(pdf.pages)
+    <span class="hljs-comment">#Удаляем страницы из pdf</span>
+    del_pages(pdf, arr, num_pages)
+
+    pdf.save(outdir+outpdf)
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">print_pdf</span><span class="hljs-params">(input_pdf, mode=<span class="hljs-number">2</span>, printer=<span class="hljs-number">1</span>)</span>:</span>
+  <span class="hljs-keyword">if</span> int(printer) == <span class="hljs-number">2</span>:
+    name = <span class="hljs-string">"\\buh\BUH DCP-L5500DN series (копия 1)"</span> <span class="hljs-comment">#win32print.GetDefaultPrinter()</span>
+  <span class="hljs-keyword">elif</span> int(printer) == <span class="hljs-number">1</span>:
+    name = <span class="hljs-string">"Brother DCP-L2540DN series Printer"</span> <span class="hljs-comment">#win32print.GetDefaultPrinter()</span>
+  win32print.SetDefaultPrinterW(name)
+  win32print.SetDefaultPrinter(name)
+
+  name = win32print.GetDefaultPrinter()
+  print(name)
+  print(<span class="hljs-string">"&amp;lt;bk&amp;gt;"</span>)
+  drivers = win32print.EnumPrinterDrivers(<span class="hljs-literal">None</span>, <span class="hljs-literal">None</span>, <span class="hljs-number">2</span>)
+  <span class="hljs-keyword">for</span> drive <span class="hljs-keyword">in</span> drivers:
+      print(drive[<span class="hljs-string">'Name'</span>])
+
+  printdefaults = {<span class="hljs-string">"DesiredAccess"</span>: win32print.PRINTER_ALL_ACCESS} 
+  handle = win32print.OpenPrinter(name, printdefaults)
+  level = <span class="hljs-number">2</span>
+  attributes = win32print.GetPrinter(handle, level)
+
+  attributes[<span class="hljs-string">'pDevMode'</span>].Duplex = mode   <span class="hljs-comment">#flip over  3 - это короткий 2 - это длинный край</span>
+
+  win32print.SetPrinter(handle, level, attributes, <span class="hljs-number">0</span>)
+  win32print.GetPrinter(handle, level)[<span class="hljs-string">'pDevMode'</span>].Duplex
+
+  r = win32print.StartDocPrinter(handle, <span class="hljs-number">1</span>, [input_pdf, <span class="hljs-literal">None</span>, <span class="hljs-string">"raw"</span>])
+  print(r)
+  win32api.ShellExecute(<span class="hljs-number">2</span>,<span class="hljs-string">'print'</span>, input_pdf,<span class="hljs-string">'.'</span>,<span class="hljs-string">'/manualstoprint'</span>,<span class="hljs-number">0</span>)
+
+  <span class="hljs-comment"># win32print.ClosePrinter(handle)</span>
+
+  <span class="hljs-comment"># win32print.SetDefaultPrinterW("Brother DCP-L2540DN series Printer")</span>
+  <span class="hljs-comment"># win32print.SetDefaultPrinter("Brother DCP-L2540DN series Printer")</span>
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>:</span>
+  <span class="hljs-comment"># проверяем есть ли директория, если нету, то делаем</span>
+  <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> os.path.exists(dir):
+    os.mkdir(dir)
+    os.mkdir(dir + <span class="hljs-string">'\\input'</span>)
+    os.mkdir(dir + <span class="hljs-string">'\\output'</span>)
+  <span class="hljs-comment"># копируем из файлы имеющие имя в файле</span>
+  copy_in_input(indir, name1)
+  <span class="hljs-comment"># берем docx скопированные файлы</span>
+  input_files = tackword(next(os.walk(indir))[<span class="hljs-number">2</span>])
+  <span class="hljs-keyword">for</span> file <span class="hljs-keyword">in</span> input_files:
+      convert(indir+file)
+
+  input_pds = next(os.walk(indir))[<span class="hljs-number">2</span>]
+
+  doc = <span class="hljs-string">''</span>
+  rec = <span class="hljs-string">''</span>
+  outs = []
+
+    <span class="hljs-comment"># Если я хочу изменять pdf файл, то записываю его в переменную</span>
+  <span class="hljs-keyword">for</span> file <span class="hljs-keyword">in</span> input_pds:
+      <span class="hljs-keyword">if</span> <span class="hljs-string">'.pdf'</span> <span class="hljs-keyword">in</span> file:
+          <span class="hljs-keyword">if</span> <span class="hljs-string">'Договор'</span> <span class="hljs-keyword">in</span> file:
+              doc = file
+          <span class="hljs-keyword">elif</span> <span class="hljs-string">'Реквизиты'</span> <span class="hljs-keyword">in</span> file:
+              rec = file
+          <span class="hljs-keyword">else</span>:
+              outs.append(file)
+
+  <span class="hljs-comment"># Открываем договор pdf, если он есть</span>
+  <span class="hljs-keyword">if</span> doc != <span class="hljs-string">''</span>:
+      doc_path = indir + doc
+
+      <span class="hljs-comment"># 1 - БАК; 2 - МАГ; 3 - СПО</span>
+      <span class="hljs-keyword">if</span> level_stydy == <span class="hljs-number">1</span>: 
+          doc_crushing(doc_path, [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>], <span class="hljs-string">'Титульный лист.pdf'</span>)
+          doc_crushing(doc_path, [<span class="hljs-number">3</span>,<span class="hljs-number">4</span>], <span class="hljs-string">'Экзаменационный лист с фото.pdf'</span>)
+          doc_crushing(doc_path, [<span class="hljs-number">5</span>,<span class="hljs-number">6</span>], <span class="hljs-string">'Заявление на поступление.pdf'</span>)
+          doc_crushing(doc_path, [<span class="hljs-number">7</span>,<span class="hljs-number">7</span>], <span class="hljs-string">'Согласие на зачисление.pdf'</span>)
+          doc_crushing(doc_path, [<span class="hljs-number">8</span>,<span class="hljs-number">9</span>], <span class="hljs-string">'Согласие на обработку персональных данных.pdf'</span>)
+          doc_crushing(doc_path, [<span class="hljs-number">10</span>,<span class="hljs-number">16</span>], <span class="hljs-string">'Договор.pdf'</span>)
+
+      <span class="hljs-keyword">elif</span> level_stydy == <span class="hljs-number">2</span>:
+          doc_crushing(doc_path, [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>], <span class="hljs-string">'Титульный лист.pdf'</span>)
+          doc_crushing(doc_path, [<span class="hljs-number">3</span>,<span class="hljs-number">4</span>], <span class="hljs-string">'Экзаменационный лист с фото.pdf'</span>)
+          doc_crushing(doc_path, [<span class="hljs-number">5</span>,<span class="hljs-number">6</span>], <span class="hljs-string">'Заявление на поступление.pdf'</span>)
+          doc_crushing(doc_path, [<span class="hljs-number">7</span>,<span class="hljs-number">7</span>], <span class="hljs-string">'Согласие на зачисление.pdf'</span>)
+          doc_crushing(doc_path, [<span class="hljs-number">8</span>,<span class="hljs-number">9</span>], <span class="hljs-string">'Согласие на обработку персональных данных.pdf'</span>)
+          doc_crushing(doc_path, [<span class="hljs-number">10</span>,<span class="hljs-number">14</span>], <span class="hljs-string">'Договор.pdf'</span>)
+
+      <span class="hljs-keyword">elif</span> level_stydy == <span class="hljs-number">3</span>:
+          doc_crushing(doc_path, [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>], <span class="hljs-string">'Титульный лист.pdf'</span>)
+          doc_crushing(doc_path, [<span class="hljs-number">3</span>,<span class="hljs-number">4</span>], <span class="hljs-string">'Заявление на поступление.pdf'</span>)
+          doc_crushing(doc_path, [<span class="hljs-number">5</span>,<span class="hljs-number">5</span>], <span class="hljs-string">'Согласие на зачисление.pdf'</span>)
+          doc_crushing(doc_path, [<span class="hljs-number">6</span>,<span class="hljs-number">7</span>], <span class="hljs-string">'Согласие на обработку персональных данных.pdf'</span>)
+          doc_crushing(doc_path, [<span class="hljs-number">8</span>,<span class="hljs-number">12</span>], <span class="hljs-string">'Договор.pdf'</span>)
+
+  <span class="hljs-keyword">if</span> rec != <span class="hljs-string">''</span>:
+      rec_path = indir + rec
+
+      <span class="hljs-keyword">with</span> pikepdf.open(rec_path) <span class="hljs-keyword">as</span> pdf:
+          num_pages = len(pdf.pages)
+          <span class="hljs-keyword">if</span> num_pages != <span class="hljs-number">1</span>:
+              del_pages(pdf, [<span class="hljs-number">1</span>,<span class="hljs-number">1</span>], num_pages)
+
+          pdf.save(outdir+<span class="hljs-string">'Реквизиты на оплату.pdf'</span>)
+
+  <span class="hljs-keyword">if</span> outs:
+      <span class="hljs-keyword">for</span> out <span class="hljs-keyword">in</span> outs:
+          <span class="hljs-keyword">with</span> pikepdf.open(indir+out) <span class="hljs-keyword">as</span> pdf:
+              pdf.save(outdir+out)
+
+  files_to_print = []
+  inputs_print = next(os.walk(outdir))[<span class="hljs-number">2</span>]
+
+  <span class="hljs-comment">#Печатаем документы</span>
+  <span class="hljs-keyword">for</span> input_print <span class="hljs-keyword">in</span> inputs_print:
+
+      path_print = outdir + input_print
+
+      <span class="hljs-keyword">if</span> <span class="hljs-string">'Экзаменационный'</span> <span class="hljs-keyword">in</span> input_print:
+          print_pdf(path_print, <span class="hljs-number">3</span>, num)
+      <span class="hljs-keyword">else</span>:
+          print_pdf(path_print, <span class="hljs-number">2</span>, num)
+
+  <span class="hljs-comment"># #Удаляем файлы</span>
+  <span class="hljs-comment"># time.sleep(100)</span>
+
+  <span class="hljs-comment"># for file in os.scandir(indir):</span>
+
+  <span class="hljs-comment">#     if file.name.endswith(".pdf") or file.name.endswith(".docx"):</span>
+  <span class="hljs-comment">#         os.unlink(file.path)</span>
+
+  <span class="hljs-comment"># for file in os.scandir(outdir):</span>
+
+  <span class="hljs-comment">#     if file.name.endswith(".pdf") or file.name.endswith(".docx"):</span>
+  <span class="hljs-comment">#         os.unlink(file.path)</span>
+
+<span class="hljs-keyword">if</span> name == <span class="hljs-string">'main'</span>:
+	main()</code></pre><p></p></div></details><h4>Вывод </h4><p>Сразу про минусы:<br><strong>принтеры не всегда меняются</strong> (т.е печатает, только, 1 принтер), разбираюсь почему.</p><p>Плюсы т.к мне не нужно постоянно вбивать диапазон страниц, освобождается куча времени, на саморазвитие)</p><p>Прощу, раскритиковать мой говнокод и поделится своим мнением о автоматизации печати (как вы это делали) или была ли моя статья полезно для вас</p><p>Это моя первая статья, поэтому давайте пожестче</p><p>P.S Документы генерирую на php форме с php сервера, на котором запускаю Python скрипт, с помощью php формы  </p><p></p></div></div></div> <div class="v-portal" style="display:none;"></div></div> <div aria-hidden="true" role="dialog" tabindex="-1" class="pswp"><div class="pswp__bg"></div> <div class="pswp__scroll-wrap"><div class="pswp__container"><div class="pswp__item"></div> <div class="pswp__item"></div> <div class="pswp__item"></div></div> <div class="pswp__ui pswp__ui--hidden"><div class="pswp__top-bar"><span class="tm-svg-icon__wrapper pswp__button pswp__button--close"><svg height="16" width="16" class="tm-svg-img tm-svg-icon"><title>Закрыть</title> <use xlink:href="/img/megazord-v25.9b4a34a5.svg#close"></use></svg></span> <div class="pswp__preloader"><div class="pswp__preloader__icn"><div class="pswp__preloader__cut"><div class="pswp__preloader__donut"></div></div></div></div></div> <button class="pswp__button pswp__button--arrow--left"><svg viewBox="0 0 24 24" class="pswp__button-icon"><path fill-rule="evenodd" clip-rule="evenodd" d="M15.707 4.293a1 1 0 010 1.414L9.414 12l6.293 6.293a1 1 0 01-1.414 1.414l-7-7a1 1 0 010-1.414l7-7a1 1 0 011.414 0z"></path></svg></button> <button class="pswp__button pswp__button--arrow--right"><svg viewBox="0 0 24 24" class="pswp__button-icon"><path fill-rule="evenodd" clip-rule="evenodd" d="M15.707 4.293a1 1 0 010 1.414L9.414 12l6.293 6.293a1 1 0 01-1.414 1.414l-7-7a1 1 0 010-1.414l7-7a1 1 0 011.414 0z"></path></svg></button></div></div></div> <!----></div> <div class="tm-article-body__tags"><div class="tm-separated-list tm-article-body__tags-links"><span class="tm-separated-list__title">Теги:</span> <ul class="tm-separated-list__list"><li class="tm-separated-list__item"><a href="https://habr.com/ru/search/?target_type=posts&amp;order=relevance&amp;q=%5Bpython%5D" class="tm-tags-list__link">python</a></li><li class="tm-separated-list__item"><a href="https://habr.com/ru/search/?target_type=posts&amp;order=relevance&amp;q=%5B%D0%BF%D0%B5%D1%87%D0%B0%D1%82%D1%8C%20%D0%B4%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D0%BE%D0%B2%5D" class="tm-tags-list__link">печать документов</a></li><li class="tm-separated-list__item"><a href="https://habr.com/ru/search/?target_type=posts&amp;order=relevance&amp;q=%5B%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%B0%D1%82%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F%5D" class="tm-tags-list__link">автоматизация</a></li></ul></div> <div class="tm-separated-list tm-article-body__tags-links"><span class="tm-separated-list__title">Хабы:</span> <ul class="tm-separated-list__list"><li class="tm-separated-list__item"><a href="https://habr.com/ru/hub/python/" class="tm-hubs-list__link">Python</a></li><li class="tm-separated-list__item"><a href="https://habr.com/ru/hub/client_side_optimization/" class="tm-hubs-list__link">Клиентская оптимизация</a></li><li class="tm-separated-list__item"><a href="https://habr.com/ru/hub/programming/" class="tm-hubs-list__link">Программирование</a></li><li class="tm-separated-list__item"><a href="https://habr.com/ru/hub/win_dev/" class="tm-hubs-list__link">Разработка под Windows</a></li></ul></div></div> <!----></article></div> <div class="tm-sandbox-article__additional-blocks"><div adfox-id="164725660339535756" params="[object Object]" class="tm-ad-banner__container tm-sandbox-article__banner"><!----> <div id="articleBottomBanner4" class="tm-ad-banner tm-ad-banner tm-ad-banner_variant-leaderboard"></div></div> <div class="tm-notice tm-notice_neutral"><!----> <div class="tm-notice__inner"><!----> <div data-test-id="notice-content" class="tm-notice__content"><span>Данная статья не&nbsp;подлежит комментированию, поскольку её&nbsp;автор ещё не&nbsp;является <a href="https://habr.com/docs/help/registration/#standard">полноправным</a> участником сообщества. Вы&nbsp;сможете связаться с&nbsp;автором только после того, как он&nbsp;получит <a href="https://habr.com/docs/help/registration/#invite">приглашение</a> от&nbsp;кого-либо из&nbsp;участников сообщества. До&nbsp;этого момента его username будет скрыт псевдонимом.</span></div></div></div></div></div></div> <div class="tm-page__sidebar"><div show-ads="true" class="tm-layout-sidebar"><div class="tm-layout-sidebar__placeholder_stick-bottom"></div> <div class="tm-sexy-sidebar tm-sexy-sidebar_stick-bottom" style="margin-top: 0px;"><aside class="tm-block tm-block tm-block_spacing-bottom"><header class="tm-block__header tm-block__header"><div class="tm-block__header-container"><h2 class="tm-block__title">О песочнице</h2> </div> <!----></header> <div class="tm-block__body tm-block__body"><div class="await-about-text">Это <a href="https://habr.com/docs/help/sandbox/" target="_blank">«Песочница»</a> — раздел, в который попадают дебютные посты пользователей, желающих стать полноправными участниками сообщества.<br><br> Если у вас есть <a href="https://habr.com/docs/help/registration/#invite" target="_blank">приглашение</a>, отправьте его автору понравившейся публикации — тогда её смогут прочитать и обсудить все остальные пользователи Хабра. <br><br>Чтобы исключить предвзятость при оценке, все публикации анонимны, псевдонимы показываются случайным образом.</div></div> <!----></aside> <aside class="tm-block tm-block tm-block_spacing-bottom"><header class="tm-block__header tm-block__header"><div class="tm-block__header-container"><h2 class="tm-block__title">О модерации</h2> </div> <!----></header> <div class="tm-block__body tm-block__body"><div class="moderation-text"><p>Не надо пропускать:</p><ul><li>рекламные и&nbsp;PR-публикации</li><li>вопросы и&nbsp;просьбы (для них есть <a href="https://qna.habr.com/" target="_blank" rel=" noopener">Хабр Q&amp;A</a>);</li><li>вакансии (используйте <a href="https://career.habr.com/" target="_blank" rel=" noopener">Хабр Карьеру</a>)</li><li>статьи, ранее опубликованные на&nbsp;других сайтах;</li><li>статьи без правильно расставленных знаков препинания, со&nbsp;смайликами, с&nbsp;обилием восклицательных знаков, неоправданным выделением слов и&nbsp;предложений и&nbsp;другим неуместным форматированием текста;</li><li>жалобы на&nbsp;компании и&nbsp;предоставляемые услуги;</li><li>низкокачественные переводы;</li><li>куски программного кода без пояснений;</li><li>односложные статьи;</li><li>статьи, слабо относящиеся к&nbsp;<nobr>IT-тематике</nobr> или не&nbsp;относящиеся к&nbsp;ней вовсе.</li></ul></div></div> <!----></aside> <!----></div></div></div></div></div></div></main> <!----></div> <div class="tm-footer-menu"><div class="tm-page-width"><div class="tm-footer-menu__container"><div class="tm-footer-menu__block"><p class="tm-footer-menu__block-title">
+          Ваш аккаунт
+        </p> <div class="tm-footer-menu__block-content"><ul class="tm-footer-menu__list"><li class="tm-footer-menu__list-item"><a href="https://habr.com/kek/v1/auth/habrahabr/?back=/ru/sandbox/174800/&amp;hl=ru" rel="nofollow" target="_self">
+                Войти
+              </a></li><li class="tm-footer-menu__list-item"><a href="https://habr.com/kek/v1/auth/habrahabr-register/?back=/ru/sandbox/174800/&amp;hl=ru" rel="nofollow" target="_self">
+                Регистрация
+              </a></li></ul></div></div><div class="tm-footer-menu__block"><p class="tm-footer-menu__block-title">
+          Разделы
+        </p> <div class="tm-footer-menu__block-content"><ul class="tm-footer-menu__list"><li class="tm-footer-menu__list-item"><a href="https://habr.com/ru/" class="footer-menu__item-link router-link-active">
+                Публикации
+              </a></li><li class="tm-footer-menu__list-item"><a href="https://habr.com/ru/news/" class="footer-menu__item-link">
+                Новости
+              </a></li><li class="tm-footer-menu__list-item"><a href="https://habr.com/ru/hubs/" class="footer-menu__item-link">
+                Хабы
+              </a></li><li class="tm-footer-menu__list-item"><a href="https://habr.com/ru/companies/" class="footer-menu__item-link">
+                Компании
+              </a></li><li class="tm-footer-menu__list-item"><a href="https://habr.com/ru/users/" class="footer-menu__item-link">
+                Авторы
+              </a></li><li class="tm-footer-menu__list-item"><a href="https://habr.com/ru/sandbox/" class="footer-menu__item-link router-link-active">
+                Песочница
+              </a></li></ul></div></div><div class="tm-footer-menu__block"><p class="tm-footer-menu__block-title">
+          Информация
+        </p> <div class="tm-footer-menu__block-content"><ul class="tm-footer-menu__list"><li class="tm-footer-menu__list-item"><a href="https://habr.com/ru/docs/help/" class="footer-menu__item-link">
+                Устройство сайта
+              </a></li><li class="tm-footer-menu__list-item"><a href="https://habr.com/ru/docs/authors/codex/" class="footer-menu__item-link">
+                Для авторов
+              </a></li><li class="tm-footer-menu__list-item"><a href="https://habr.com/ru/docs/companies/corpblogs/" class="footer-menu__item-link">
+                Для компаний
+              </a></li><li class="tm-footer-menu__list-item"><a href="https://habr.com/ru/docs/docs/transparency/" class="footer-menu__item-link">
+                Документы
+              </a></li><li class="tm-footer-menu__list-item"><a href="https://account.habr.com/info/agreement" target="_blank">
+                Соглашение
+              </a></li><li class="tm-footer-menu__list-item"><a href="https://account.habr.com/info/confidential/" target="_blank">
+                Конфиденциальность
+              </a></li></ul></div></div><div class="tm-footer-menu__block"><p class="tm-footer-menu__block-title">
+          Услуги
+        </p> <div class="tm-footer-menu__block-content"><ul class="tm-footer-menu__list"><li class="tm-footer-menu__list-item"><a href="https://company.habr.com/ru/corporate-blogs/" target="_blank">
+                Корпоративный блог
+              </a></li><li class="tm-footer-menu__list-item"><a href="https://company.habr.com/ru/advertising/" target="_blank">
+                Медийная реклама
+              </a></li><li class="tm-footer-menu__list-item"><a href="https://company.habr.com/ru/native-special/" target="_blank">
+                Нативные проекты
+              </a></li><li class="tm-footer-menu__list-item"><a href="https://company.habr.com/ru/education-programs/" target="_blank">
+                Образовательные программы
+              </a></li><li class="tm-footer-menu__list-item"><a href="https://company.habr.com/ru/hello-startup/" target="_blank">
+                Стартапам
+              </a></li><li class="tm-footer-menu__list-item"><a href="https://habr.com/ru/megaprojects/" class="footer-menu__item-link">
+                Мегапроекты
+              </a></li></ul></div></div></div></div></div> <div class="tm-footer"><div class="tm-page-width"><div class="tm-footer__container"><!----> <div class="tm-footer__social"><a href="https://www.facebook.com/habrahabr.ru" rel="nofollow noopener noreferrer" target="_blank" class="tm-svg-icon__wrapper tm-social-icons__icon"><svg height="16" width="16" class="tm-svg-img tm-svg-icon"><title>Facebook</title> <use xlink:href="/img/social-icons-sprite.svg#social-logo-facebook"></use></svg></a><a href="https://twitter.com/habr_com" rel="nofollow noopener noreferrer" target="_blank" class="tm-svg-icon__wrapper tm-social-icons__icon"><svg height="16" width="16" class="tm-svg-img tm-svg-icon"><title>Twitter</title> <use xlink:href="/img/social-icons-sprite.svg#social-logo-twitter"></use></svg></a><a href="https://vk.com/habr" rel="nofollow noopener noreferrer" target="_blank" class="tm-svg-icon__wrapper tm-social-icons__icon"><svg height="16" width="16" class="tm-svg-img tm-svg-icon"><title>VK</title> <use xlink:href="/img/social-icons-sprite.svg#social-logo-vkontakte"></use></svg></a><a href="https://telegram.me/habr_com" rel="nofollow noopener noreferrer" target="_blank" class="tm-svg-icon__wrapper tm-social-icons__icon"><svg height="16" width="16" class="tm-svg-img tm-svg-icon"><title>Telegram</title> <use xlink:href="/img/social-icons-sprite.svg#social-logo-telegram"></use></svg></a><a href="https://www.youtube.com/channel/UCd_sTwKqVrweTt4oAKY5y4w" rel="nofollow noopener noreferrer" target="_blank" class="tm-svg-icon__wrapper tm-social-icons__icon"><svg height="16" width="16" class="tm-svg-img tm-svg-icon"><title>Youtube</title> <use xlink:href="/img/social-icons-sprite.svg#social-logo-youtube"></use></svg></a><a href="https://zen.yandex.ru/habr" rel="nofollow noopener noreferrer" target="_blank" class="tm-svg-icon__wrapper tm-social-icons__icon"><svg height="16" width="16" class="tm-svg-img tm-svg-icon"><title>Яндекс Дзен</title> <use xlink:href="/img/social-icons-sprite.svg#social-logo-zen"></use></svg></a></div> <div class="v-portal" style="display:none;"></div> <button class="tm-footer__link"><!---->
+        Настройка языка
+      </button> <a href="https://habr.com/ru/feedback/" class="tm-footer__link">
+        Техническая поддержка
+      </a> <!----> <a href="https://habr.com/berserk-mode-nope" class="tm-footer__link">
+        Вернуться на старую версию
+      </a> <div class="tm-footer-copyright"><span class="tm-copyright"><span class="tm-copyright__years">© 2006–2022, </span> <span class="tm-copyright__name"><a href="https://company.habr.com/" rel="noopener" target="_blank" class="tm-copyright__link">Habr</a></span></span></div></div></div></div> <!----> <!----></div> <div class="vue-portal-target"><!----></div></div>
+
+<script src="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/chunk-vendors.a3ff8f09.js.download" defer=""></script><script src="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/page-article.f7c9bd30.js.download" defer=""></script><script src="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/app.344a2afd.js.download" defer=""></script>
+
+
+
+    <script async="" src="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/js"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    </script>
+  
+  <script type="text/javascript">
+    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+    m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+    (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+    ym(24049213, "init", {
+      defer:true,
+      trackLinks:true,
+      accurateTrackBounce:true,
+      webvisor:false,
+    });
+  </script>
+  <noscript>
+    <div>
+      <img src="https://mc.yandex.ru/watch/24049213" style="position:absolute; left:-9999px;" alt="" />
+    </div>
+  </noscript>
+  
+    <script type="text/javascript">
+      window.addEventListener('load', function () {
+        setTimeout(() => {
+          const img = new Image();
+          img.src = 'https://vk.com/rtrg?p=VK-RTRG-421343-57vKE';
+        }, 0);
+      });
+    </script>
+  
+<script src="Автоматизируем%20печать%20документов%20с%20помощью%20Python%20_%20Хабр_files/ads.js.download" onload="window[&#39;zhY4i4nJ9K&#39;] = true"></script><div id="K9Jn4i4Yhz" style="display: none;"></div>
+
+
+<div><div><div class="Vue-Toastification__container top-left"></div></div><div><div class="Vue-Toastification__container top-center"></div></div><div><div class="Vue-Toastification__container top-right"></div></div><div><div class="Vue-Toastification__container bottom-left"></div></div><div><div class="Vue-Toastification__container bottom-center"></div></div><div><div class="Vue-Toastification__container bottom-right"></div></div></div><textarea id="BFI_DATA" style="width: 1px; height: 1px; display: none;"></textarea><title> </title><div id="WidgetFloaterPanels" translate="no" style="display: none; text-align: left; direction: ltr; visibility: hidden;" class="LTRStyle"> <div id="WidgetFloater" style="display: none" onmouseover="Microsoft.Translator.OnMouseOverFloater()" onmouseout="Microsoft.Translator.OnMouseOutFloater()"> <div id="WidgetLogoPanel"> <span id="WidgetTranslateWithSpan"><span>TRANSLATE with </span><img id="FloaterLogo"></span> <span id="WidgetCloseButton" title="Exit Translation" onclick="Microsoft.Translator.FloaterOnClose()">x</span></div> <div id="LanguageMenuPanel"> <div class="DDStyle_outer"><input name="LanguageMenu_svid" type="text" id="LanguageMenu_svid" style="display:none;" autocomplete="on" value="en" onclick="this.select()"> <input name="LanguageMenu_textid" type="text" id="LanguageMenu_textid" style="display:none;" autocomplete="on" onclick="this.select()"> <span onselectstart="return false" tabindex="0" class="DDStyle" id="__LanguageMenu_header" onclick="return LanguageMenu &amp;&amp; !LanguageMenu.Show(&#39;__LanguageMenu_popup&#39;, event);" onkeydown="return LanguageMenu &amp;&amp; !LanguageMenu.Show(&#39;__LanguageMenu_popup&#39;, event);">English</span> <div style="position:relative;text-align:left;left:0;"><div style="position:absolute;width:;left:0px;"><div class="DDStyle" style="display:none;" id="__LanguageMenu_popup"> <table id="LanguageMenu" border="0"> <tbody><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;ar&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#ar">Arabic</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;he&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#he">Hebrew</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;pl&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#pl">Polish</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;bg&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#bg">Bulgarian</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;hi&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#hi">Hindi</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;pt&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#pt">Portuguese</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;ca&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#ca">Catalan</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;mww&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#mww">Hmong Daw</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;ro&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#ro">Romanian</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;zh-CHS&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#zh-CHS">Chinese Simplified</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;hu&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#hu">Hungarian</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;ru&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#ru">Russian</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;zh-CHT&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#zh-CHT">Chinese Traditional</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;id&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#id">Indonesian</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;sk&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#sk">Slovak</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;cs&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#cs">Czech</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;it&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#it">Italian</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;sl&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#sl">Slovenian</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;da&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#da">Danish</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;ja&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#ja">Japanese</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;es&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#es">Spanish</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;nl&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#nl">Dutch</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;tlh&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#tlh">Klingon</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;sv&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#sv">Swedish</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;en&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#en">English</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;ko&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#ko">Korean</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;th&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#th">Thai</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;et&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#et">Estonian</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;lv&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#lv">Latvian</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;tr&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#tr">Turkish</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;fi&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#fi">Finnish</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;lt&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#lt">Lithuanian</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;uk&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#uk">Ukrainian</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;fr&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#fr">French</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;ms&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#ms">Malay</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;ur&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#ur">Urdu</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;de&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#de">German</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;mt&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#mt">Maltese</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;vi&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#vi">Vietnamese</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;el&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#el">Greek</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;no&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#no">Norwegian</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;cy&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#cy">Welsh</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;ht&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#ht">Haitian Creole</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;fa&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://habr.com/ru/sandbox/174800/#fa">Persian</a></td><td></td> </tr> </tbody></table> <img alt="" style="height:7px;width:17px;border-width:0px;left:20px;"> </div></div></div></div> <script type="text/javascript"> var LanguageMenu; var LanguageMenu_keys=["ar","bg","ca","zh-CHS","zh-CHT","cs","da","nl","en","et","fi","fr","de","el","ht","he","hi","mww","hu","id","it","ja","tlh","ko","lv","lt","ms","mt","no","fa","pl","pt","ro","ru","sk","sl","es","sv","th","tr","uk","ur","vi","cy"]; var LanguageMenu_values=["Arabic","Bulgarian","Catalan","Chinese Simplified","Chinese Traditional","Czech","Danish","Dutch","English","Estonian","Finnish","French","German","Greek","Haitian Creole","Hebrew","Hindi","Hmong Daw","Hungarian","Indonesian","Italian","Japanese","Klingon","Korean","Latvian","Lithuanian","Malay","Maltese","Norwegian","Persian","Polish","Portuguese","Romanian","Russian","Slovak","Slovenian","Spanish","Swedish","Thai","Turkish","Ukrainian","Urdu","Vietnamese","Welsh"]; var LanguageMenu_callback=function(){ }; var LanguageMenu_popupid='__LanguageMenu_popup'; </script> </div> <div id="CTFLinksPanel"> <span id="ExternalLinksPanel"><a id="HelpLink" title="Help" target="_blank" href="https://go.microsoft.com/?linkid=9722454"> <img id="HelpImg"></a> <a id="EmbedLink" href="javascript:Microsoft.Translator.FloaterShowEmbed()" title="Get this widget for your own site"> <img id="EmbedImg"></a> <a id="ShareLink" title="Share translated page with friends" href="javascript:Microsoft.Translator.FloaterShowSharePanel()"> <img id="ShareImg"></a> </span> </div> <div id="FloaterProgressBar"> <span id="ProgressFill"></span> </div> </div> <div id="WidgetFloaterCollapsed" style="display: none" onmouseover="Microsoft.Translator.OnMouseOverFloater()"> <span>TRANSLATE with </span><img id="CollapsedLogoImg"></div> <div id="FloaterSharePanel" style="display: none"> <div id="ShareTextDiv"> <span id="ShareTextSpan"> COPY THE URL BELOW </span> </div> <div id="ShareTextboxDiv"> <input name="ShareTextbox" type="text" id="ShareTextbox" readonly="readonly" onclick="this.select()"> <!--a id="TwitterLink" title="Share on Twitter"> <img id="TwitterImg" /></a> <a-- id="FacebookLink" title="Share on Facebook"> <img id="FacebookImg" /></a--> <a id="EmailLink" title="Email this translation"> <img id="EmailImg"></a> </div> <div id="ShareFooter"> <span id="ShareHelpSpan"><a id="ShareHelpLink"> <img id="ShareHelpImg"></a></span> <span id="ShareBackSpan"><a id="ShareBack" href="javascript:Microsoft.Translator.FloaterOnShareBackClick()" title="Back To Translation"> Back</a></span> </div> <input name="EmailSubject" type="hidden" id="EmailSubject" value="Check out this page in {0} translated from {1}"> <input name="EmailBody" type="hidden" id="EmailBody" value="Translated: {0}%0d%0aOriginal: {1}%0d%0a%0d%0aAutomatic translation powered by Microsoft® Translator%0d%0ahttp://www.bing.com/translator?ref=MSTWidget"> <input type="hidden" id="ShareHelpText" value="This link allows visitors to launch this page and automatically translate it to {0}."> </div> <div id="FloaterEmbed" style="display: none"> <div id="EmbedTextDiv"> <span id="EmbedTextSpan">EMBED THE SNIPPET BELOW IN YOUR SITE</span> <a id="EmbedHelpLink" title="Copy this code and place it into your HTML."> <img id="EmbedHelpImg"></a> </div> <div id="EmbedTextboxDiv"> <input name="EmbedSnippetTextBox" type="text" id="EmbedSnippetTextBox" readonly="readonly" value="&lt;div id=&#39;MicrosoftTranslatorWidget&#39; class=&#39;Dark&#39; style=&#39;color:white;background-color:#555555&#39;&gt;&lt;/div&gt;&lt;script type=&#39;text/javascript&#39;&gt;setTimeout(function(){var s=document.createElement(&#39;script&#39;);s.type=&#39;text/javascript&#39;;s.charset=&#39;UTF-8&#39;;s.src=((location &amp;&amp; location.href &amp;&amp; location.href.indexOf(&#39;https&#39;) == 0)?&#39;https://ssl.microsofttranslator.com&#39;:&#39;http://www.microsofttranslator.com&#39;)+&#39;/ajax/v3/WidgetV3.ashx?siteData=ueOIGRSKkd965FeEGM5JtQ**&amp;ctf=true&amp;ui=true&amp;settings=manual&amp;from=en&#39;;var p=document.getElementsByTagName(&#39;head&#39;)[0]||document.documentElement;p.insertBefore(s,p.firstChild); },0);&lt;/script&gt;" onclick="this.select()"> </div> <div id="EmbedNoticeDiv"><span id="EmbedNoticeSpan">Enable collaborative features and customize widget: <a href="http://www.bing.com/widget/translator" target="_blank">Bing Webmaster Portal</a></span></div> <div id="EmbedFooterDiv"><span id="EmbedBackSpan"><a href="javascript:Microsoft.Translator.FloaterOnEmbedBackClick()" title="Back To Translation">Back</a></span></div> </div> <script type="text/javascript"> var intervalId = setInterval(function () { if (MtPopUpList) { LanguageMenu = new MtPopUpList(); var langMenu = document.getElementById(LanguageMenu_popupid); var origLangDiv = document.createElement("div"); origLangDiv.id = "OriginalLanguageDiv"; origLangDiv.innerHTML = "<span id='OriginalTextSpan'>ORIGINAL: </span><span id='OriginalLanguageSpan'></span>"; langMenu.appendChild(origLangDiv); LanguageMenu.Init('LanguageMenu', LanguageMenu_keys, LanguageMenu_values, LanguageMenu_callback, LanguageMenu_popupid); window["LanguageMenu"] = LanguageMenu; clearInterval(intervalId); } }, 1); </script> </div></body><app-content ng-version="14.2.0"></app-content></html>

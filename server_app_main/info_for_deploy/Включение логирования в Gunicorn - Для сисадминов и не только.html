@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<!-- saved from url=(0075)https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html -->
+<html lang="ru-RU" dir="ltr" class="g-offcanvas-css3 no-touch"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge"><!--<base href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html">--><base href="."><meta name="author" content="Y. G."><meta name="description" content="Sys-Adm.in - Сайт для сисадминов и не только. Здесь собраны различные материалы основанные на личной практике. Блог Евгения Гончарова."><title>Включение логирования в Gunicorn - Для сисадминов и не только</title><link href="https://sys-adm.in/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon"><!--[if lt IE 9]><script src="/media/system/js/html5fallback.js?a335f9e32598ca4387466bea7cf697cb"></script><![endif]--><style id="jch-optimize-critical-css" data-id="665199cb11faca8de016d9f0e3f899f975c7566816f99035519b63d84c4e0418">.extravote{margin:0 0 10px}.extravote-stars,.extravote-info{margin:0!important;padding:0!important;position:relative;vertical-align:middle}.voted .extravote-info.ihide,.extravote-stars{display:inline-block}.extravote-stars,.extravote-star a,.extravote-info,.extravote-stars .current-rating{height:25px;line-height:25px}.extravote-stars{font-size:1em;overflow:hidden;width:125px}.extravote-info{font-size:.78em}.extravote-star{background-position:0!important;background-image:none;display:inline;margin:0!important;padding:0!important}.extravote-stars,.extravote-star a:hover,.extravote-stars .current-rating{background-image:url(/plugins/content/extravote/assets/images/star.png)!important;background-color:transparent!important;background-repeat:repeat-x!important}.extravote-star a:hover,.extravote-stars .current-rating{background-position:left -1000px}.extravote-star a,.extravote-stars .current-rating{border:medium none;cursor:pointer;left:0;outline:none;overflow:hidden;position:absolute;text-indent:-1000em!important;top:0}.extravote-star a:hover{background-position:left bottom!important}.extravote-star a:focus,.extravote-star a:active{background:none!important}.extravote-stars .current-rating{background-position:left center;z-index:1}.extravote-star a.ev-5-stars,.extravote-star a.ev-10-stars,.extravote-star a.ev-15-stars,.extravote-star a.ev-20-stars,.extravote-star a.ev-25-stars,.extravote-star a.ev-30-stars,.extravote-star a.ev-35-stars,.extravote-star a.ev-40-stars,.extravote-star a.ev-45-stars,.extravote-star a.ev-50-stars{margin:0;padding:0}.extravote-star a.ev-5-stars{width:10%;z-index:12}.extravote-star a.ev-10-stars{width:20%;z-index:11}.extravote-star a.ev-15-stars{width:30%;z-index:10}.extravote-star a.ev-20-stars{width:40%;z-index:9}.extravote-star a.ev-25-stars{width:50%;z-index:8}.extravote-star a.ev-30-stars{width:60%;z-index:7}.extravote-star a.ev-35-stars{width:70%;z-index:6}.extravote-star a.ev-40-stars{width:80%;z-index:5}.extravote-star a.ev-45-stars{width:90%;z-index:4}.extravote-star a.ev-50-stars{width:100%;z-index:3}div.mod-languages ul{margin:0;padding:0;list-style:none}div.mod-languages li{margin-left:5px;margin-right:5px}div.mod-languages ul.lang-inline li{display:inline}div.mod-languages a{text-decoration:none}.g-main-nav .g-dropdown,.g-main-nav .g-standard .g-dropdown .g-dropdown{position:absolute;top:auto;left:auto;opacity:0;visibility:hidden;overflow:hidden}.g-main-nav ul,#g-mobilemenu-container ul{margin:0;padding:0;list-style:none}@-webkit-viewport{width:device-width}@-moz-viewport{width:device-width}@-ms-viewport{width:device-width}@-o-viewport{width:device-width}@viewport{width:device-width}html{height:100%;font-size:100%;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;box-sizing:border-box}*,*::before,*::after{box-sizing:inherit}body{margin:0}#g-page-surround{min-height:100vh;position:relative;overflow:hidden}article,aside,details,footer,header,hgroup,main,nav,section,summary{display:block}a{background:transparent;text-decoration:none}a:active,a:hover{outline:0}b,strong{font-weight:bold}img{height:auto;max-width:100%;display:inline-block;vertical-align:middle;border:0;-ms-interpolation-mode:bicubic}pre{overflow:auto}button,input,optgroup,select,textarea{color:inherit;font:inherit;margin:0}button{overflow:visible}button,select{text-transform:none}button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer}button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}input{line-height:normal}input[type="search"]{-webkit-appearance:textfield}input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{-webkit-appearance:none}textarea{overflow:auto}optgroup{font-weight:bold}tr,td,th{vertical-align:middle}th,td{padding:0.375rem 0}th{text-align:left}@media print{body{background:#fff !important;color:#000 !important}}.g-container{margin:0 auto;padding:0}.g-grid{display:flex;flex-flow:row wrap;list-style:none;margin:0;padding:0;text-rendering:optimizespeed}.g-block{flex:1;min-width:0;min-height:0}.size-23{flex:0 23%;width:23%}.size-77{flex:0 77%;width:77%}.size-33-3{flex:0 33.33333%;width:33.33333%;max-width:33.33333%}.size-100{width:100%;max-width:100%;flex-grow:0;flex-basis:100%}.g-main-nav:not(.g-menu-hastouch) .g-dropdown{z-index:10;top:-9999px}.g-main-nav .g-toplevel>li{display:inline-block;cursor:pointer;transition:background .2s ease-out,transform .2s ease-out}.g-main-nav .g-toplevel>li .g-menu-item-content{display:inline-block;vertical-align:middle;cursor:pointer}.g-main-nav .g-toplevel>li .g-menu-item-container{transition:transform .2s ease-out}.g-main-nav .g-toplevel>li.g-parent .g-menu-parent-indicator{display:inline-block;vertical-align:middle;line-height:normal}.g-main-nav .g-toplevel>li.g-parent .g-menu-parent-indicator:after{display:inline-block;cursor:pointer;width:1.5rem;opacity:0.5;font-family:"Font Awesome 5 Pro","Font Awesome 5 Free",FontAwesome;font-weight:900;content:"";text-align:right}.g-main-nav .g-dropdown{transition:opacity .2s ease-out,transform .2s ease-out;z-index:1}.g-main-nav .g-sublevel>li{transition:background .2s ease-out,transform .2s ease-out}.g-main-nav .g-sublevel>li .g-menu-item-content{display:inline-block;vertical-align:middle;word-break:break-word}.g-menu-item-container{display:block;position:relative}.g-main-nav .g-standard{position:relative}.g-main-nav .g-standard .g-sublevel>li{position:relative}.g-main-nav .g-standard .g-dropdown{top:100%}.g-main-nav .g-standard .g-dropdown.g-dropdown-right{left:0}.g-main-nav .g-standard .g-dropdown .g-dropdown{top:0}.g-main-nav .g-standard .g-dropdown .g-block{flex-grow:0;flex-basis:100%}.g-main-nav .g-standard .g-go-back{display:none}.g-go-back.g-level-1{display:none}.g-go-back a span{display:none}.g-go-back a:before{display:block;text-align:center;width:1.28571em;font-family:"Font Awesome 5 Pro","Font Awesome 5 Free",FontAwesome;font-weight:900;content:"";opacity:0.5}h1,h2,h3,h4,h5,h6{margin:0.75rem 0 1.5rem 0;text-rendering:optimizeLegibility}p{margin:1.5rem 0}ul,ol,dl{margin-top:1.5rem;margin-bottom:1.5rem}ul ul,ul ol,ul dl,ol ul,ol ol,ol dl,dl ul,dl ol,dl dl{margin-top:0;margin-bottom:0}ul{margin-left:1.5rem;padding:0}dl{padding:0}ol{padding-left:1.5rem}pre{margin:1.5rem 0;padding:0.938rem}label{margin-bottom:0.375rem}textarea,select[multiple=multiple]{transition:border-color;padding:0.375rem 0.375rem}textarea:focus,select[multiple=multiple]:focus{outline:none}input[type="color"],input[type="date"],input[type="datetime"],input[type="datetime-local"],input[type="email"],input[type="month"],input[type="number"],input[type="password"],input[type="search"],input[type="tel"],input[type="text"],input[type="time"],input[type="url"],input[type="week"],input:not([type]),textarea{transition:border-color;padding:0.375rem 0.375rem}input[type="color"]:focus,input[type="date"]:focus,input[type="datetime"]:focus,input[type="datetime-local"]:focus,input[type="email"]:focus,input[type="month"]:focus,input[type="number"]:focus,input[type="password"]:focus,input[type="search"]:focus,input[type="tel"]:focus,input[type="text"]:focus,input[type="time"]:focus,input[type="url"]:focus,input[type="week"]:focus,input:not([type]):focus,textarea:focus{outline:none}textarea{resize:vertical}select{max-width:100%}button,input[type="submit"]{cursor:pointer;user-select:none;vertical-align:middle;white-space:nowrap;border:inherit}.hide,body .g-offcanvas-hide{display:none}.center{text-align:center !important}.align-right{text-align:right !important}#g-offcanvas{position:fixed;top:0;left:0;right:0;bottom:0;overflow-x:hidden;overflow-y:auto;text-align:left;display:none;-webkit-overflow-scrolling:touch}.g-offcanvas-toggle{display:block;position:absolute;top:0.7rem;left:0.7rem;z-index:10;line-height:1;cursor:pointer}.g-offcanvas-left #g-page-surround{left:0}.g-offcanvas-left #g-offcanvas{right:inherit}.g-main-nav .g-standard .g-dropdown{width:180px}.g-content{margin:0.625rem;padding:0.938rem}body{font-size:1rem;line-height:1.5}h1{font-size:2.25rem}h2{font-size:1.9rem}h3{font-size:1.5rem}h4{font-size:1.15rem}h5{font-size:1rem}h6{font-size:0.85rem}sub,sup{font-size:0.75rem}code,kbd,pre,samp{font-size:1rem;font-family:"Menlo","Monaco",monospace}textarea,select[multiple=multiple],input[type="color"],input[type="date"],input[type="datetime"],input[type="datetime-local"],input[type="email"],input[type="month"],input[type="number"],input[type="password"],input[type="search"],input[type="tel"],input[type="text"],input[type="time"],input[type="url"],input[type="week"],input:not([type]){border-radius:0.1875rem}body{color:#666;background:#f5f5f5;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}#g-page-surround{background:#f5f5f5}@media print{#g-page-surround{background:#fff !important;color:#000 !important}}a{color:#000}a:hover{color:#4d4d4d}h1,h2,h3,h4,h5,h6,strong{color:#4d4d4d}.gantry-logo{display:inline-block}@media only all and (max-width:47.99rem){.gantry-logo{display:block;text-align:center}}body{font-family:"roboto",sans-serif;font-weight:400}h1,h2,h3,h4,h5{font-family:"roboto",sans-serif;font-weight:500}bold,strong{font-weight:700}code{background:#f9f2f4;color:#9c1d3d}pre{padding:1rem;margin:2rem 0;background:#f6f6f6;border:1px solid #ddd;border-radius:0.1875rem;line-height:1.15;font-size:0.9rem}#g-navigation{background:#333;color:#fff;text-align:center;position:relative;z-index:2}#g-navigation .g-container{position:relative}#g-navigation a{color:#999}#g-navigation a:hover{color:#fff}#g-navigation .g-main-nav{margin:-1.563rem}#g-navigation .g-main-nav .g-toplevel>li>.g-menu-item-container{color:#fff}#g-navigation .g-main-nav .g-toplevel>li:not(.g-menu-item-type-particle):not(.g-menu-item-type-module):hover{background:#242424}#g-navigation .g-main-nav .g-toplevel>li:not(.g-menu-item-type-particle):not(.g-menu-item-type-module).active{background:#f5f5f5}#g-navigation .g-main-nav .g-toplevel>li:not(.g-menu-item-type-particle):not(.g-menu-item-type-module).active>.g-menu-item-container{color:#222}#g-navigation .g-main-nav .g-dropdown{background:#242424}#g-navigation .g-main-nav .g-sublevel>li>.g-menu-item-container{color:#fff}#g-navigation .g-main-nav .g-sublevel>li:not(.g-menu-item-type-particle):not(.g-menu-item-type-module):hover,#g-navigation .g-main-nav .g-sublevel>li:not(.g-menu-item-type-particle):not(.g-menu-item-type-module).active{background:#1a1a1a}#g-navigation .g-main-nav .g-toplevel{display:flex;flex-flow:row wrap;justify-content:center;-webkit-justify-content:center}.g-main-nav .g-toplevel{font-weight:500}.g-main-nav .g-toplevel>li>.g-menu-item-container{text-decoration:none;padding:1.2rem 0.938rem}.g-main-nav .g-toplevel>li>.g-menu-item-container>.g-menu-item-content{line-height:normal}.g-main-nav .g-dropdown{text-align:left}.g-main-nav .g-sublevel>li>.g-menu-item-container{padding:0.7815rem 1rem}@media print{#g-navigation{background:#fff !important;color:#000 !important}}#g-offcanvas{background:#142d53;width:17rem;color:#fff}.g-offcanvas-toggle{font-size:1.5rem;color:#fff;display:none}@media only all and (max-width:48rem){.g-offcanvas-toggle{display:block}}#g-mobilemenu-container{margin:-1.563rem}@media print{#g-offcanvas{background:#fff !important;color:#000 !important}}#g-header{background:#333;color:#fff;position:relative;z-index:3}#g-header a{color:#999}#g-header a:hover{color:#fff}#g-header .g-main-nav .g-toplevel>li>.g-menu-item-container{color:#fff}#g-header .g-main-nav .g-toplevel>li:not(.g-menu-item-type-particle):not(.g-menu-item-type-module):hover{background:#242424}#g-header .g-main-nav .g-dropdown{background:#242424}#g-header .g-main-nav .g-sublevel>li>.g-menu-item-container{color:#fff}#g-header .g-main-nav .g-sublevel>li:not(.g-menu-item-type-particle):not(.g-menu-item-type-module):hover,#g-header .g-main-nav .g-sublevel>li:not(.g-menu-item-type-particle):not(.g-menu-item-type-module).active{background:#1a1a1a}#g-header .g-main-nav .g-toplevel{display:flex;flex-flow:row wrap}@media print{#g-header{background:#fff !important;color:#000 !important}}#g-page-surround{box-shadow:0 0 15px rgba(0,0,0,0.4)}#g-main{padding:1.5rem 0;background:#f5f5f5;color:#222}@media print{#g-main{background:#fff !important;color:#000 !important}}#g-sidebar,#g-aside{padding:1.5rem 0;color:#222}@media print{#g-sidebar{background:#fff !important;color:#000 !important}}th{background:#f7f7f7;padding:0.5rem}td{padding:0.5rem;border:1px solid #eaeaea}textarea,select[multiple=multiple]{background-color:white;border:1px solid #ddd;box-shadow:inset 0 1px 3px rgba(0,0,0,0.06)}textarea:hover,select[multiple=multiple]:hover{border-color:#c4c4c4}textarea:focus,select[multiple=multiple]:focus{border-color:#000}input[type="color"],input[type="date"],input[type="datetime"],input[type="datetime-local"],input[type="email"],input[type="month"],input[type="number"],input[type="password"],input[type="search"],input[type="tel"],input[type="text"],input[type="time"],input[type="url"],input[type="week"],input:not([type]),textarea{background-color:white;border:1px solid #ddd;box-shadow:inset 0 1px 3px rgba(0,0,0,0.06)}input[type="color"]:hover,input[type="date"]:hover,input[type="datetime"]:hover,input[type="datetime-local"]:hover,input[type="email"]:hover,input[type="month"]:hover,input[type="number"]:hover,input[type="password"]:hover,input[type="search"]:hover,input[type="tel"]:hover,input[type="text"]:hover,input[type="time"]:hover,input[type="url"]:hover,input[type="week"]:hover,input:not([type]):hover,textarea:hover{border-color:#c4c4c4}input[type="color"]:focus,input[type="date"]:focus,input[type="datetime"]:focus,input[type="datetime-local"]:focus,input[type="email"]:focus,input[type="month"]:focus,input[type="number"]:focus,input[type="password"]:focus,input[type="search"]:focus,input[type="tel"]:focus,input[type="text"]:focus,input[type="time"]:focus,input[type="url"]:focus,input[type="week"]:focus,input:not([type]):focus,textarea:focus{border-color:#000}.g-main-nav .g-standard .g-dropdown{transition:none}.g-main-nav .g-standard .g-fade.g-dropdown{transition:opacity 0.3s ease-out,transform 0.3s ease-out}.g-container{width:80rem}@media only all and (min-width:70rem) and (max-width:79.99rem){.g-container{width:70rem}}@media only all and (min-width:48rem) and (max-width:69.99rem){.g-container{width:48rem}}@media only all and (min-width:30.01rem) and (max-width:47.99rem){.g-container{width:30rem}}@media only all and (max-width:30rem){.g-container{width:100%}}@media only all and (max-width:47.99rem){.g-block{flex-grow:0;flex-basis:100%}}@media only all and (max-width:47.99rem){body [class*="size-"]{flex-grow:0;flex-basis:100%;max-width:100%}}@media only all and (max-width:47.99rem){@supports not (flex-wrap:wrap){.g-grid{display:block;flex-wrap:inherit}.g-block{display:block;flex:inherit}}}.visible-large,.visible-desktop,.visible-tablet,.visible-phone,.g-block.visible-large,.g-block.visible-desktop,.g-block.visible-tablet,.g-block.visible-phone{display:none !important}@media only all and (max-width:47.99rem){.visible-phone{display:block !important}.g-block.visible-phone{display:block !important}}@media only all and (min-width:48rem) and (max-width:69.99rem){.visible-tablet{display:block !important}.g-block.visible-tablet{display:block !important}}@media only all and (min-width:70rem) and (max-width:79.99rem){.visible-desktop{display:block !important}.g-block.visible-desktop{display:block !important}}@media only all and (min-width:80rem){.visible-large{display:block !important}.g-block.visible-large{display:block !important}.visible-desktop{display:block !important}.g-block.visible-desktop{display:block !important}}@media only all and (max-width:47.99rem){.hidden-phone{display:none !important}}@media only all and (max-width:47.99rem){.align-right{text-align:inherit !important}}sub,sup{position:relative;font-size:75%;line-height:0;vertical-align:baseline}sup{top:-0.5em}sub{bottom:-0.25em}button,input,select,textarea{margin:0;font-size:100%;vertical-align:middle}button,input{*overflow:visible;line-height:normal}button::-moz-focus-inner,input::-moz-focus-inner{padding:0;border:0}button,html input[type="button"],input[type="reset"],input[type="submit"]{cursor:pointer;-webkit-appearance:button}label,select,button,input[type="button"],input[type="reset"],input[type="submit"],input[type="radio"],input[type="checkbox"]{cursor:pointer}input[type="search"]{-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;-webkit-appearance:textfield}input[type="search"]::-webkit-search-decoration,input[type="search"]::-webkit-search-cancel-button{-webkit-appearance:none}textarea{overflow:auto;vertical-align:top}@media print{*{color:#000 !important;text-shadow:none !important;background:transparent !important;box-shadow:none !important}a,a:visited{text-decoration:underline}a[href]:after{content:" (" attr(href) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}tr,img{page-break-inside:avoid}img{max-width:100% !important}p,h2,h3{orphans:3;widows:3}h2,h3{page-break-after:avoid}}[class*="span"]{float:left;min-height:1px;margin-left:20px}.span12{width:940px}.span1{width:60px}.row-fluid{width:100%}.row-fluid:before,.row-fluid:after{display:table;line-height:0;content:""}.row-fluid:after{clear:both}.row-fluid [class*="span"]{display:block;float:left;width:100%;min-height:30px;margin-left:2.127659574468085%;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}.row-fluid [class*="span"]:first-child{margin-left:0}.row-fluid .span12{width:100%}.row-fluid .span1{width:6.382978723404255%}p{margin:0 0 10px}strong{font-weight:bold}em{font-style:italic}.muted{color:#999}ul.inline,ol.inline{margin-left:0;list-style:none}ul.inline>li,ol.inline>li{display:inline-block;*display:inline;padding-right:5px;padding-left:5px;*zoom:1}q:before,q:after,blockquote:before,blockquote:after{content:""}code,pre{padding:0 3px 2px}code{padding:2px 4px;white-space:nowrap}pre{display:block;word-break:break-all;word-wrap:break-word;white-space:pre;white-space:pre-wrap}form{margin:0 0 20px}label{display:block;margin-bottom:5px}select,textarea,input[type="text"],input[type="password"],input[type="datetime"],input[type="datetime-local"],input[type="date"],input[type="month"],input[type="time"],input[type="week"],input[type="number"],input[type="email"],input[type="url"],input[type="search"],input[type="tel"],input[type="color"],.uneditable-input{display:inline-block;padding:4px 6px;margin-bottom:10px;font-size:14px;vertical-align:middle;border-radius:4px}input,textarea,.uneditable-input{width:206px}textarea{height:auto}textarea:focus,input[type="text"]:focus,input[type="password"]:focus,input[type="datetime"]:focus,input[type="datetime-local"]:focus,input[type="date"]:focus,input[type="month"]:focus,input[type="time"]:focus,input[type="week"]:focus,input[type="number"]:focus,input[type="email"]:focus,input[type="url"]:focus,input[type="search"]:focus,input[type="tel"]:focus,input[type="color"]:focus,.uneditable-input:focus{outline:0}input[type="radio"],input[type="checkbox"]{margin:4px 0 0;line-height:normal}input[type="file"],input[type="image"],input[type="submit"],input[type="reset"],input[type="button"],input[type="radio"],input[type="checkbox"]{width:auto}select,input[type="file"]{height:30px;line-height:30px}select{width:220px;background-color:#fff;border:1px solid #ccc}select:focus,input[type="file"]:focus,input[type="radio"]:focus,input[type="checkbox"]:focus{outline:thin dotted #333;outline:5px auto -webkit-focus-ring-color;outline-offset:-2px}.uneditable-input,.uneditable-textarea{color:#999;cursor:not-allowed;background-color:#fcfcfc;border-color:#ccc;-webkit-box-shadow:inset 0 1px 2px rgba(0,0,0,0.025);-moz-box-shadow:inset 0 1px 2px rgba(0,0,0,0.025);box-shadow:inset 0 1px 2px rgba(0,0,0,0.025)}.uneditable-input{overflow:hidden;white-space:nowrap}.uneditable-textarea{width:auto;height:auto}input:-moz-placeholder,textarea:-moz-placeholder{color:#999}input:-ms-input-placeholder,textarea:-ms-input-placeholder{color:#999}input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{color:#999}.input-medium{width:150px}input,textarea,.uneditable-input{margin-left:0}input:focus:invalid,textarea:focus:invalid,select:focus:invalid{color:#b94a48;border-color:#ee5f5b}input:focus:invalid:focus,textarea:focus:invalid:focus,select:focus:invalid:focus{border-color:#e9322d;-webkit-box-shadow:0 0 6px #f8b9b7;-moz-box-shadow:0 0 6px #f8b9b7;box-shadow:0 0 6px #f8b9b7}input.search-query{padding-right:14px;padding-left:14px;margin-bottom:0;-webkit-border-radius:15px;-moz-border-radius:15px;border-radius:15px}.form-search input,.form-inline input,.form-horizontal input,.form-search textarea,.form-inline textarea,.form-horizontal textarea,.form-search select,.form-inline select,.form-horizontal select,.form-search .help-inline,.form-inline .help-inline,.form-horizontal .help-inline,.form-search .uneditable-input,.form-inline .uneditable-input,.form-horizontal .uneditable-input,.form-search .input-prepend,.form-inline .input-prepend,.form-horizontal .input-prepend,.form-search .input-append,.form-inline .input-append,.form-horizontal .input-append{display:inline-block;margin-bottom:0;vertical-align:middle}.form-search label,.form-inline label,.form-search .btn-group,.form-inline .btn-group{display:inline-block}.form-search .input-append,.form-inline .input-append,.form-search .input-prepend,.form-inline .input-prepend{margin-bottom:0}table{max-width:100%;background-color:transparent;border-collapse:collapse;border-spacing:0}.dropdown-toggle:active,.open .dropdown-toggle{outline:0}.caret{display:inline-block;width:0;height:0;vertical-align:top;border-top:4px solid #000;border-right:4px solid transparent;border-left:4px solid transparent;content:""}.dropdown-menu{position:absolute;top:100%;left:0;z-index:1000;display:none;float:left;min-width:160px;padding:5px 0;margin:2px 0 0;list-style:none;background-color:#fff;border:1px solid #ccc;border:1px solid rgba(0,0,0,0.2);-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;-webkit-box-shadow:0 5px 10px rgba(0,0,0,0.2);-moz-box-shadow:0 5px 10px rgba(0,0,0,0.2);box-shadow:0 5px 10px rgba(0,0,0,0.2);-webkit-background-clip:padding-box;-moz-background-clip:padding;background-clip:padding-box}.dropdown-menu>li>a{display:block;padding:3px 20px;clear:both;font-weight:normal;line-height:20px;color:#333;white-space:nowrap}.dropdown-menu>li>a:hover,.dropdown-menu>li>a:focus,.dropdown-submenu:hover>a,.dropdown-submenu:focus>a{color:#fff;text-decoration:none;background-color:#0081c2;background-image:-moz-linear-gradient(top,#0088cc,#0077b3);background-image:-webkit-gradient(linear,0 0,0 100%,from(#0088cc),to(#0077b3));background-image:-webkit-linear-gradient(top,#0088cc,#0077b3);background-image:-o-linear-gradient(top,#0088cc,#0077b3);background-image:linear-gradient(to bottom,#0088cc,#0077b3);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc',endColorstr='#ff0077b3',GradientType=0)}.pull-right>.dropdown-menu{right:0;left:auto}.dropdown-submenu{position:relative}.btn{display:inline-block;padding:4px 12px;margin-bottom:0;font-size:14px;line-height:20px;color:#333;text-align:center;text-shadow:0 1px 1px rgba(255,255,255,0.75);vertical-align:middle;cursor:pointer;background-color:#f5f5f5;background-image:-moz-linear-gradient(top,#ffffff,#e6e6e6);background-image:-webkit-gradient(linear,0 0,0 100%,from(#ffffff),to(#e6e6e6));background-image:-webkit-linear-gradient(top,#ffffff,#e6e6e6);background-image:-o-linear-gradient(top,#ffffff,#e6e6e6);background-image:linear-gradient(to bottom,#ffffff,#e6e6e6);background-repeat:repeat-x;border:1px solid #ccc;border-color:#e6e6e6 #e6e6e6 #bfbfbf;border-color:rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25);border-bottom-color:#b3b3b3;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff',endColorstr='#ffe6e6e6',GradientType=0);filter:progid:DXImageTransform.Microsoft.gradient(enabled=false);-webkit-box-shadow:inset 0 1px 0 rgba(255,255,255,0.2),0 1px 2px rgba(0,0,0,0.05);-moz-box-shadow:inset 0 1px 0 rgba(255,255,255,0.2),0 1px 2px rgba(0,0,0,0.05);box-shadow:inset 0 1px 0 rgba(255,255,255,0.2),0 1px 2px rgba(0,0,0,0.05)}.btn:hover,.btn:focus,.btn:active,.btn.active,.btn.disabled,.btn[disabled]{color:#333;background-color:#e6e6e6}.btn:hover,.btn:focus{color:#333;text-decoration:none;background-position:0 -15px;-webkit-transition:background-position 0.1s linear;-moz-transition:background-position 0.1s linear;-o-transition:background-position 0.1s linear;transition:background-position 0.1s linear}.btn:focus{outline:thin dotted #333;outline:5px auto -webkit-focus-ring-color;outline-offset:-2px}.btn.active,.btn:active{background-image:none;outline:0;-webkit-box-shadow:inset 0 2px 4px rgba(0,0,0,0.15),0 1px 2px rgba(0,0,0,0.05);-moz-box-shadow:inset 0 2px 4px rgba(0,0,0,0.15),0 1px 2px rgba(0,0,0,0.05);box-shadow:inset 0 2px 4px rgba(0,0,0,0.15),0 1px 2px rgba(0,0,0,0.05)}.btn.disabled,.btn[disabled]{cursor:default;background-image:none;opacity:0.65;filter:alpha(opacity=65);-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}button.btn::-moz-focus-inner,input[type="submit"].btn::-moz-focus-inner{padding:0;border:0}.btn-group{position:relative;display:inline-block;font-size:0;white-space:nowrap;vertical-align:middle}.btn-group>.btn{position:relative;-webkit-border-radius:0;-moz-border-radius:0;border-radius:0}.btn-group>.btn,.btn-group>.dropdown-menu,.btn-group>.popover{font-size:14px}.btn-group>.btn:first-child{margin-left:0;-webkit-border-bottom-left-radius:4px;border-bottom-left-radius:4px;-webkit-border-top-left-radius:4px;border-top-left-radius:4px;-moz-border-radius-bottomleft:4px;-moz-border-radius-topleft:4px}.btn-group>.btn:last-child,.btn-group>.dropdown-toggle{-webkit-border-top-right-radius:4px;border-top-right-radius:4px;-webkit-border-bottom-right-radius:4px;border-bottom-right-radius:4px;-moz-border-radius-topright:4px;-moz-border-radius-bottomright:4px}.btn-group>.btn:hover,.btn-group>.btn:focus,.btn-group>.btn:active,.btn-group>.btn.active{z-index:2}.btn-group .dropdown-toggle:active,.btn-group.open .dropdown-toggle{outline:0}.btn-group.open .dropdown-toggle{background-image:none;-webkit-box-shadow:inset 0 2px 4px rgba(0,0,0,0.15),0 1px 2px rgba(0,0,0,0.05);-moz-box-shadow:inset 0 2px 4px rgba(0,0,0,0.15),0 1px 2px rgba(0,0,0,0.05);box-shadow:inset 0 2px 4px rgba(0,0,0,0.15),0 1px 2px rgba(0,0,0,0.05)}.btn .caret{margin-top:8px;margin-left:0}.breadcrumb{padding:8px 15px;margin:0 0 20px;list-style:none;background-color:#f5f5f5;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px}.breadcrumb>li{display:inline-block;text-shadow:0 1px 0 #fff}.breadcrumb>li>.divider{padding:0 5px;color:#ccc}.breadcrumb>.active{color:#999}.pager{margin:20px 0;text-align:center;list-style:none}.pager:before,.pager:after{display:table;line-height:0;content:""}.pager:after{clear:both}.pager li{display:inline}.pager li>a,.pager li>span{display:inline-block;padding:5px 14px;background-color:#fff;border:1px solid #ddd;-webkit-border-radius:15px;-moz-border-radius:15px;border-radius:15px}.pager li>a:hover,.pager li>a:focus{text-decoration:none;background-color:#f5f5f5}.pager .next>a,.pager .next>span{float:right}.pager .previous>a,.pager .previous>span{float:left}.popover{position:absolute;top:0;left:0;z-index:1010;display:none;max-width:276px;padding:1px;text-align:left;white-space:normal;background-color:#fff;border:1px solid #ccc;border:1px solid rgba(0,0,0,0.2);-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;-webkit-box-shadow:0 5px 10px rgba(0,0,0,0.2);-moz-box-shadow:0 5px 10px rgba(0,0,0,0.2);box-shadow:0 5px 10px rgba(0,0,0,0.2);-webkit-background-clip:padding-box;-moz-background-clip:padding;background-clip:padding-box}.label,.badge{display:inline-block;padding:2px 4px;font-size:11.844px;font-weight:bold;line-height:14px;color:#fff;text-shadow:0 -1px 0 rgba(0,0,0,0.25);white-space:nowrap;vertical-align:baseline;background-color:#999}.label{border-radius:3px}.badge{padding-right:9px;padding-left:9px;border-radius:9px}.label:empty,.badge:empty{display:none}a.label:hover,a.label:focus,a.badge:hover,a.badge:focus{color:#fff;text-decoration:none;cursor:pointer}.label-info,.badge-info{background-color:#3a87ad}.label-info[href],.badge-info[href]{background-color:#2d6987}.pull-right{float:right}.hide{display:none}p{margin:1.5rem 0}dl{margin-top:1.5rem;margin-bottom:1.5rem}dd{margin-left:1.5rem}blockquote{padding:0 0 0 0.938rem;margin:0 0 1.5rem}code,pre{border-radius:0.1875rem}pre{padding:0.938rem;margin:0 0 1.5rem;border-radius:0.1875rem}.btn .caret{margin-bottom:7px}.platform-content input{box-sizing:content-box}textarea:focus,input[type="text"]:focus,input[type="password"]:focus,input[type="datetime"]:focus,input[type="datetime-local"]:focus,input[type="date"]:focus,input[type="month"]:focus,input[type="time"]:focus,input[type="week"]:focus,input[type="number"]:focus,input[type="email"]:focus,input[type="url"]:focus,input[type="search"]:focus,input[type="tel"]:focus,input[type="color"]:focus,.uneditable-input:focus{border-color:rgba(82,168,236,0.8);box-shadow:inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(82,168,236,0.6)}input[type="color"],input[type="date"],input[type="datetime"],input[type="datetime-local"],input[type="email"],input[type="month"],input[type="number"],input[type="password"],input[type="search"],input[type="tel"],input[type="text"],input[type="time"],input[type="url"],input[type="week"],input:not([type]),textarea{padding:0.375rem 0.375rem}.uneditable-input{width:100%}.element-invisible{position:absolute;padding:0;margin:0;border:0;height:1px;width:1px;overflow:hidden}.dropdown-menu{text-align:left}[class^="icon-"],[class*=" icon-"]{margin-right:.25em;line-height:14px}[class^="icon-"],[class*=" icon-"]{display:inline-block;width:14px;height:14px;*margin-right:.3em;line-height:14px}[class^="icon-"]:before,[class*=" icon-"]:before{font-family:'IcoMoon';font-style:normal;speak:none}.icon-chevron-right:before,.icon-rightarrow:before,.icon-arrow-right:before{content:"\e006"}.icon-chevron-left:before,.icon-leftarrow:before,.icon-arrow-left:before{content:"\e008"}.icon-new:before,.icon-plus:before{content:"\2a"}.icon-upload:before{content:"\e022"}.icon-user:before{content:"\22"}.icon-options:before,.icon-cog:before{content:"\38"}.icon-eye-open:before,.icon-eye:before{content:"\3c"}.icon-calendar:before{content:"\43"}.fa{display:inline-block;font:normal normal normal 14px/1 FontAwesome;font-size:inherit;text-rendering:auto;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.fa-lg{font-size:1.33333333em;line-height:.75em;vertical-align:-15%}.fa-fw{width:1.28571429em;text-align:center}.pull-right{float:right}:root .fa-rotate-90,:root .fa-rotate-180,:root .fa-rotate-270,:root .fa-flip-horizontal,:root .fa-flip-vertical{filter:none}.fa-navicon:before,.fa-reorder:before,.fa-bars:before{content:"\f0c9"}.fa-telegram:before{content:"\f2c6"}.dropdown-menu>li>a:hover,.dropdown-menu>li>a:focus,.dropdown-submenu:hover>a,.dropdown-submenu:focus>a{background-image:none;background-color:#000}blockquote{border-left:5px solid #ddd}code,pre{color:#666;background-color:#f2f2f2;border:1px solid #ddd}textarea,input[type="text"],input[type="password"],input[type="datetime"],input[type="datetime-local"],input[type="date"],input[type="month"],input[type="time"],input[type="week"],input[type="number"],input[type="email"],input[type="url"],input[type="search"],input[type="tel"],input[type="color"],.uneditable-input{background-color:#fff;border:1px solid #ddd;box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);transition:border 0.2s linear,box-shadow 0.2s linear}.muted{color:#999}@media only all and (max-width:47.99rem){body{padding-right:0;padding-left:0}}@media only all and (max-width:47.99rem){.row-fluid{width:100%}.row,.thumbnails{margin-left:0}[class*="span"],.uneditable-input[class*="span"],.row-fluid [class*="span"]{display:block;float:none;width:100%;margin-left:0;box-sizing:border-box}.span12,.row-fluid .span12{width:100%;box-sizing:border-box}.input-large,.input-xlarge,.input-xxlarge,input[class*="span"],select[class*="span"],textarea[class*="span"],.uneditable-input{display:block;width:100%;min-height:30px;box-sizing:border-box}}@media only all and (min-width:48rem) and (max-width:69.99rem){.row{margin-left:-20px}.row:before,.row:after{display:table;line-height:0;content:""}.row:after{clear:both}[class*="span"]{float:left;min-height:1px;margin-left:20px}.span12{width:724px}.span1{width:42px}.row-fluid{width:100%}.row-fluid:before,.row-fluid:after{display:table;line-height:0;content:""}.row-fluid:after{clear:both}.row-fluid [class*="span"]{display:block;float:left;width:100%;min-height:30px;margin-left:2.7624309392%;box-sizing:border-box}.row-fluid [class*="span"]:first-child{margin-left:0}.row-fluid .span12{width:100%}.row-fluid .span1{width:5.8011049724%}input,textarea,.uneditable-input{margin-left:0}}#main-content h3{margin:1.5rem 0}dl dt,dl dd{display:inline}.createdby{margin-left:0}.logo-text{font-size:1.3em}.header-search-link{display:block;width:100%;text-align:center}.mod-languages{border-bottom:1px solid #f2f1f1;padding-bottom:5px}.breadcrumb{margin-top:-10px}.moduletable.popular-tags,.moduletable.readable-articles{padding-top:25px;margin-bottom:30px;border-top:1px solid #f2f1f1}.page-header h2{line-height:40px}input#mod-search-searchword28{color:#4d4d4d}.breadcrumb{margin-bottom:0}article{margin-bottom:30px}.pager.pagenav li a{color:#222}.tags.inline{padding-left:15px}a.forum-bt-content-link{background:transparent url(/images/statfiles/sys-admin-forum-link.png) center left no-repeat;padding-left:37px}body{color:#333;font-size:1.125em;line-height:1.4;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif}body#tinymce .brush,.brush{background:#3F3F3F;padding:10px 10px 10px 15px;margin-bottom:10px;color:#fff;text-shadow:none;margin-top:5px}.item-page h2{margin-top:25px}.tags a:not(.btn){color:#fff;font-weight:normal}.logo-slogan{color:#fff}::selection{background:#dc4e41;color:#fff}ol,ul{margin-top:10px}div[itemprop="articleBody"] a{color:#dc4e41 !important;text-transform:uppercase}div[itemprop="articleBody"] a:hover{color:#3b5998 !important}brush::selection{background:#ffb7b7}.brush{transition:.3s}.brush:hover{background:#F3F3F3;color:#000}pre{margin:0 0 0px}.customright-dummy{display:none}ul.pagenav{margin-top:40px !important}.lab-sysadmin{margin-bottom:10px}.custom:hover{opacity:1}.custom{opacity:.8;transition:opacity .3s ease-out}.item-page img,.blog img,.entry-content img{padding:10px;border:1px solid #e8e8e8;background:#f1f1f1}a.cat-web:hover:before,a.cat-sitemap:hover:before,a.cat-home:hover:before,a.cat-software:hover:before,a.cat-live:hover:before,a.cat-sec:hover:before,a.cat-vm:hover:before,a.cat-vm:hover:before,a.cat-prgm:hover:before{color:#000}a.cat-web:before,a.cat-sitemap:before,a.cat-home:before,a.cat-software:before,a.cat-live:before,a.cat-sec:before,a.cat-vm:before,a.cat-vm:before,a.cat-prgm:before{font-family:FontAwesome;display:inline-block;padding-right:5px;vertical-align:middle;color:#ccc}a.cat-web:before{content:"\f0ac"}a.cat-sitemap:before{content:"\f0e8"}a.cat-software:before{content:"\f0ad"}a.cat-home:before{content:"\f015"}a.cat-live:before{content:"\f21e"}a.cat-sec:before{content:"\f185"}a.cat-prgm:before{content:"\f120"}a.cat-vm:before{content:"\f1b3"}span.icon-calendar,span.icon-eye-open{margin-right:3px}dl.article-info.muted,time.modify-date.muted{font-size:12px;color:#4d4d4d}span.tag-count.badge.badge-info{margin-left:-5px;background-color:transparent;color:red}div.mod_search28 input[type="search"]{width:auto}@font-face{font-family:"roboto";font-style:normal;font-weight:400;src:url('/templates/g5_hydrogen/fonts/roboto_regular_macroman/Roboto-Regular-webfont.eot?62aef78c#iefix') format("embedded-opentype"),url('/templates/g5_hydrogen/fonts/roboto_regular_macroman/Roboto-Regular-webfont.woff2?62aef78c') format("woff2"),url('/templates/g5_hydrogen/fonts/roboto_regular_macroman/Roboto-Regular-webfont.woff?62aef78c') format("woff"),url('/templates/g5_hydrogen/fonts/roboto_regular_macroman/Roboto-Regular-webfont.ttf?62aef78c') format("truetype"),url('/templates/g5_hydrogen/fonts/roboto_regular_macroman/Roboto-Regular-webfont.svg?62aef78c#roboto') format("svg");font-display:swap}@font-face{font-family:"roboto";font-style:normal;font-weight:500;src:url('/templates/g5_hydrogen/fonts/roboto_medium_macroman/Roboto-Medium-webfont.eot?62aef78c#iefix') format("embedded-opentype"),url('/templates/g5_hydrogen/fonts/roboto_medium_macroman/Roboto-Medium-webfont.woff2?62aef78c') format("woff2"),url('/templates/g5_hydrogen/fonts/roboto_medium_macroman/Roboto-Medium-webfont.woff?62aef78c') format("woff"),url('/templates/g5_hydrogen/fonts/roboto_medium_macroman/Roboto-Medium-webfont.ttf?62aef78c') format("truetype"),url('/templates/g5_hydrogen/fonts/roboto_medium_macroman/Roboto-Medium-webfont.svg?62aef78c#roboto') format("svg");font-display:swap}@font-face{font-family:"roboto";font-style:normal;font-weight:700;src:url('/templates/g5_hydrogen/fonts/roboto_bold_macroman/Roboto-Bold-webfont.eot?62aef78c#iefix') format("embedded-opentype"),url('/templates/g5_hydrogen/fonts/roboto_bold_macroman/Roboto-Bold-webfont.woff2?62aef78c') format("woff2"),url('/templates/g5_hydrogen/fonts/roboto_bold_macroman/Roboto-Bold-webfont.woff?62aef78c') format("woff"),url('/templates/g5_hydrogen/fonts/roboto_bold_macroman/Roboto-Bold-webfont.ttf?62aef78c') format("truetype"),url('/templates/g5_hydrogen/fonts/roboto_bold_macroman/Roboto-Bold-webfont.svg?62aef78c#roboto') format("svg");font-display:swap}@font-face{font-family:'IcoMoon';src:url('/media/jui/fonts/IcoMoon.eot');src:url('/media/jui/fonts/IcoMoon.eot#iefix') format('embedded-opentype'),url('/media/jui/fonts/IcoMoon.svg#IcoMoon') format('svg'),url('/media/jui/fonts/IcoMoon.woff') format('woff'),url('/media/jui/fonts/IcoMoon.ttf') format('truetype');font-weight:normal;font-style:normal;font-display:swap}@font-face{font-family:'FontAwesome';src:url('/media/gantry5/assets/fonts/fontawesome-webfont.eot?v=4.7.0');src:url('/media/gantry5/assets/fonts/fontawesome-webfont.eot#iefix&v=4.7.0') format('embedded-opentype'),url('/media/gantry5/assets/fonts/fontawesome-webfont.woff2?v=4.7.0') format('woff2'),url('/media/gantry5/assets/fonts/fontawesome-webfont.woff?v=4.7.0') format('woff'),url('/media/gantry5/assets/fonts/fontawesome-webfont.ttf?v=4.7.0') format('truetype'),url('/media/gantry5/assets/fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular') format('svg');font-weight:normal;font-style:normal;font-display:swap}</style><link rel="stylesheet" href="./Включение логирования в Gunicorn - Для сисадминов и не только_files/aa659bd11ddc4f2af3b6b038509e37103fabd064c10cc433bfcbd6ba051d4ec8.css" as="style" media="all" onload="this.rel=&#39;stylesheet&#39;"> <script src="./Включение логирования в Gunicorn - Для сисадминов и не только_files/842c0c87edf03c497e7f1f4cb9a9cb47a3b030dea26ff54e0cd679b4046f903.download"></script> <script>var ev_basefolder='';var extravote_text=Array('Your browser does not support AJAX!','Loading','Thank you for voting!','You need to login to rate this item.','You have already rated this item.','(%s Votes)','(%s Vote)','Rating %s ');jQuery(function($){initTooltips();$("body").on("subform-row-add",initTooltips);function initTooltips(event,container){container=container||document;$(container).find(".hasTooltip").tooltip({"html":true,"container":"body"});}});jQuery(window).on('load',function(){new JCaption('img.caption');});</script> <script src="./Включение логирования в Gunicorn - Для сисадминов и не только_files/842c0c87edf03c497e7f1f4cb9a9cb4709c2b3dbcec365a606fec59f4a9b298.download" async=""></script> <script src="./Включение логирования в Gunicorn - Для сисадминов и не только_files/dsp" type="text/javascript" defer="" async=""></script><style>[_nghost-lsb-c52]{font-family:Open Sans,sans-serif;color:#121212}</style><style type="text/css">.TnITTtw-fp-collapsed-button {
+    display: none;
+    position: fixed !important;
+    top: 16px !important;
+    right: 16px !important;
+}
+
+.TnITTtw-fp-collapsed-button:hover {
+    opacity: 1.0 !important;
+}
+
+.TnITTtw-mate-fp-bar {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial, Ubuntu, sans-serif !important;
+    color: #000;
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 999;
+    background: rgb(255 255 255 / 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 16px;
+    border-radius: 11px;
+    box-shadow: 0 2px 10px rgb(0 0 0 / 25%);
+    width: 320px;
+    line-height: initial;
+}
+
+@-moz-document url-prefix() {
+    .TnITTtw-mate-fp-bar {
+        background: rgb(255 255 255 / 1.0);
+    }
+}
+
+.TnITTtw-mate-fp-bar.TnITTtw-dark-mode {
+    background: rgb(44, 44, 43);
+}
+
+.TnITTtw-hide-fp-bar {
+    width: 12px;
+    height: 12px;
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/regular-close-tt.png) !important;
+    background-size: 12px 12px;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    cursor: pointer;
+}
+
+.TnITTtw-hide-fp-bar:hover {
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/hover-close-tt.png) !important;
+}
+
+.TnITTtw-current-page-lang {
+    color: #6d6d72;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.TnITTtw-dark-mode .TnITTtw-current-page-lang {
+    color: #98989D;
+}
+
+.TnITTtw-fp-translate {
+    width: calc(100% - 73px) !important;
+    font-size: 14px !important;
+    text-transform: none !important;
+}
+
+.TnITTtw-fp-translate.TnITTtw-in-progress {
+    animation-name: funky-bg;
+    animation-duration: 10s;
+    animation-timing-function: ease-in;
+}
+
+.TnITTtw-fp-translate.TnITTtw-show-original {
+    width: calc(100% - 20px) !important;
+}
+
+@keyframes funky-bg {
+    from {
+        background-image: linear-gradient(145deg, #01EF92, #00D8FB),
+        linear-gradient(35deg, rgba(1, 239, 146, 0.25), rgba(0, 216, 251, 0.25)) !important;
+    }
+
+    to {
+        background-image: linear-gradient(90deg, #01EF92, #00D8FB),
+        linear-gradient(35deg, rgba(1, 239, 146, 0.25), rgba(0, 216, 251, 0.25)) !important;
+    }
+}
+
+.TnITTtw-change-language, .TnITTtw-stop-fp {
+    width: 38px;
+    height: 38px;
+    background-color: #EFEFF4;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 16px 16px;
+    border-radius: 11px;
+    display: inline-block;
+    vertical-align: top;
+    cursor: pointer;
+}
+
+.TnITTtw-change-language {
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/globe-earth.png) !important;
+}
+
+.TnITTtw-dark-mode .TnITTtw-change-language {
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/globe-earth-dark.png) !important;
+}
+
+.TnITTtw-stop-fp {
+    display: none;
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/regular-stt-stop.png) !important;
+    background-size: 12px 12px;
+}
+
+.TnITTtw-dark-mode .TnITTtw-change-language, .TnITTtw-dark-mode .TnITTtw-stop-fp {
+    background-color: #525251 !important;
+}
+
+.TnITTtw-change-language:hover, .TnITTtw-stop-fp:hover {
+    background-color: #F6F6F6;
+}
+
+.TnITTtw-change-language:active, .TnITTtw-stop-fp:active {
+    background-color: #E9E9E9;
+}
+
+.TnITTtw-dark-mode .TnITTtw-change-language:hover,
+.TnITTtw-dark-mode .TnITTtw-stop-fp:hover,
+.TnITTtw-dark-mode .TnITTtw-change-language:active,
+.TnITTtw-dark-mode .TnITTtw-stop-fp:active {
+    background-color: #767675;
+}
+
+#TnITTtw-always-translate {
+}
+
+.TnITTtw-fp-options input {
+    padding: initial;
+    width: auto;
+    border: initial;
+    box-shadow: initial;
+    line-height: initial;
+    height: auto;
+    display: initial;
+    position: initial;
+    appearance: auto;
+    top: initial;
+    cursor: pointer;
+    margin: 0;
+}
+
+.TnITTtw-fp-options input[readonly="readonly"] {
+    opacity: 0.5;
+}
+
+#TnITTtw-always-translate + label,
+#TnITTtw-never-translate-lang + label,
+#TnITTtw-never-translate-site + label {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial, Ubuntu, sans-serif !important;
+    display: inline-block;
+    font-weight: 400;
+    font-size: 14px;
+    margin-left: 4px;
+    color: #000;
+    cursor: pointer;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 296px;
+    vertical-align: top;
+    line-height: initial;
+    letter-spacing: initial;
+    text-transform: initial;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 0;
+}
+
+#TnITTtw-always-translate + label::before,
+#TnITTtw-never-translate-lang + label::before,
+#TnITTtw-never-translate-site + label::before,
+#TnITTtw-always-translate + label::after,
+#TnITTtw-never-translate-lang + label::after,
+#TnITTtw-never-translate-site + label::after  {
+    content: initial;
+} 
+
+.TnITTtw-always-translate-inner-label {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 252px;
+    vertical-align: top;
+    display: inline-block;
+}
+
+.TnITTtw-dark-mode #TnITTtw-always-translate + label,
+.TnITTtw-dark-mode #TnITTtw-never-translate-lang + label,
+.TnITTtw-dark-mode #TnITTtw-never-translate-site + label {
+    color: #FFF;
+}
+
+#TnITTtw-always-translate + label.TnITTtw-not-pro {
+    opacity: 0.5;
+}
+
+#TnITTtw-always-translate + label .TnITTtw-pro-label {
+    position: relative;
+    background: #000;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #FFF;
+    padding: 2px 5px;
+    border-radius: 4px;
+    margin-left: 10px;
+    top: -1px;
+    user-select: none;
+    -webkit-user-select: none;
+    display: inline;
+    font-weight: 500;
+}
+
+.TnITTtw-dark-mode #TnITTtw-always-translate + label .TnITTtw-pro-label {
+    background: #FFF;
+    color: #000;
+}
+
+.TnITTtw-inline-original-tooltip {
+    display: none;
+    position: absolute;
+    margin: 0px;
+    border: none;
+    padding: 16px;
+    color: rgb(0, 0, 0);
+    background-color: rgb(255 255 255 / 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 11px;
+    box-shadow: 0 2px 10px rgb(0 0 0 / 25%);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial, Ubuntu, sans-serif;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: normal;
+}
+
+.TnITTtw-dark-mode.TnITTtw-inline-original-tooltip {
+    background-color: rgb(0 0 0 / 0.915);
+    color: #FFF;
+}
+
+.TnITTtw-inline-original-tooltip .TnITTtw-close-original-tooltip {
+    width: 12px;
+    height: 12px;
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/regular-close-tt.png) !important;
+    background-size: 12px 12px;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    cursor: pointer;
+}
+
+.TnITTtw-inline-original-tooltip .TnITTtw-close-original-tooltip:hover {
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/hover-close-tt.png) !important;
+}
+
+.TnITTtw-inline-original-tooltip .TnITTtw-original-label {
+    margin: 0;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    color: #6d6d72;
+    margin-bottom: 10px;
+}
+
+.TnITTtw-inline-original-tooltip.TnITTtw-dark-mode .TnITTtw-original-label {
+    color: #98989D;
+}
+
+.TnITTtw-inline-original-tooltip .TnITTtw-text-layout {
+    display: inline-block;
+    margin: 0;
+    font-size: 16px;
+    color: #000;
+}
+
+.TnITTtw-inline-original-tooltip.TnITTtw-dark-mode .TnITTtw-text-layout {
+    color: #FFF;
+}
+
+.TnITTtw-highlighted-for-original {
+    color: #0F0F5F;
+    background-color: #F0F0A0;
+}
+
+/* Dropdown scrollbars */
+
+#selVisibleScroll-1, #selVisibleScroll-2, #selVisibleScroll-3 {
+    overflow: hidden;
+    height: 259px;
+    width: 100%;
+    position: relative;
+}
+
+#sel-scrollbar-1, #sel-scrollbar-2, #sel-scrollbar-3 {
+    position: absolute;
+    width: 4px;
+    height: 259px;
+    left: 225px;
+}
+
+#sel-track-1, #sel-track-2, #sel-track-3 {
+    position: absolute;
+    top: 1px;
+    width: 4px;
+    height: calc(100% - 6px);
+}
+
+#sel-dragBar-1, #sel-dragBar-2, #sel-dragBar-3 {
+    position: absolute;
+    top: 1px;
+    width: 4px;
+    background: rgba(43, 43, 43, 0.5);
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.dark-mode #sel-dragBar-1, .dark-mode #sel-dragBar-2, .dark-mode #sel-dragBar-3 {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+#sel-dragBar-1:hover, #sel-dragBar-2:hover, #sel-dragBar-3:hover, 
+#sel-dragBar-1:active, #sel-dragBar-2:active, #sel-dragBar-3:active {
+    background: rgba(43, 43, 43, 0.675);
+}
+
+.dark-mode #sel-dragBar-1:hover,
+.dark-mode #sel-dragBar-2:hover,
+.dark-mode #sel-dragBar-3:hover,
+.dark-mode #sel-dragBar-1:active,
+.dark-mode #sel-dragBar-2:active,
+.dark-mode #sel-dragBar-3:active {
+    background: rgba(255, 255, 255, 0.675);
+}
+
+#sel-scrollbar-1, #sel-track-1, #sel-dragBar-1, 
+#sel-scrollbar-2, #sel-track-2, #sel-dragBar-2,
+#sel-scrollbar-3, #sel-track-3, #sel-dragBar-3 {
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* Spinner for when it's translating a page */
+
+.TnITTtw-cta-button-layout {
+    position: relative;
+    display: inline;
+}
+
+.TnITTtw-spinner {
+    display: none;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    user-select: none;
+    -webkit-user-select: none;
+}
+  
+  @media screen and (max-width: 800px) {
+    .TnITTtw-spinner {
+      top: 28px;
+    }
+  }
+
+  .TnITTtw-spinner.in-text {
+    display: block;
+    background: transparent;
+    position: initial;
+  }
+
+  .TnITTtw-spinner.left {
+    text-align: left;
+  }
+  
+  .TnITTtw-spinner > div {
+    width: 12px;
+    height: 12px;
+    background-color: rgb(0, 71, 46);
+  
+    border-radius: 100%;
+    display: inline-block;
+    -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+    animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+  }
+
+  .TnITTtw-spinner.in-text > div {
+    background-color: #000;
+  }
+  
+  .TnITTtw-spinner .TnITTtw-bounce1 {
+    -webkit-animation-delay: -0.32s;
+    animation-delay: -0.32s;
+  }
+  
+  .TnITTtw-spinner .TnITTtw-bounce2 {
+    -webkit-animation-delay: -0.16s;
+    animation-delay: -0.16s;
+  }
+  
+  @-webkit-keyframes sk-bouncedelay {
+    0%, 80%, 100% { -webkit-transform: scale(0) }
+    40% { -webkit-transform: scale(1.0) }
+  }
+  
+  @keyframes sk-bouncedelay {
+    0%, 80%, 100% { 
+      -webkit-transform: scale(0);
+      transform: scale(0);
+    } 40% { 
+      -webkit-transform: scale(1.0);
+      transform: scale(1.0);
+    }
+  }</style><style type="text/css">/*
+ * contextMenu.js v 1.4.0
+ * Author: Sudhanshu Yadav
+ * s-yadav.github.com
+ * Copyright (c) 2013 Sudhanshu Yadav.
+ * Dual licensed under the MIT and GPL licenses
+**/
+
+.iw-contextMenu {
+    box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.10) !important;
+    border: 1px solid #c8c7cc !important;
+    border-radius: 11px !important;
+    display: none;
+    z-index: 1000000132;
+    max-width: 300px !important;
+    width: auto !important;
+}
+
+.dark-mode .iw-contextMenu,
+.TnITTtw-dark-mode.iw-contextMenu,
+.TnITTtw-dark-mode .iw-contextMenu {
+    border-color: #747473 !important;
+}
+
+.iw-cm-menu {
+    background: #fff !important;
+    color: #000 !important;
+    margin: 0px !important;
+    padding: 0px !important;
+    overflow: visible !important;
+}
+
+.dark-mode .iw-cm-menu,
+.TnITTtw-dark-mode.iw-cm-menu,
+.TnITTtw-dark-mode .iw-cm-menu {
+    background: #525251 !important;
+    color: #FFF !important;
+}
+
+.iw-curMenu {
+}
+
+.iw-cm-menu li {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial, Ubuntu, sans-serif !important;
+    list-style: none !important;
+    padding: 10px !important;
+    padding-right: 20px !important;
+    border-bottom: 1px solid #c8c7cc !important;
+    font-weight: 400 !important;
+    cursor: pointer !important;
+    position: relative !important;
+    font-size: 14px !important;
+    margin: 0 !important;
+    line-height: inherit !important;
+    border-radius: 0 !important;
+    display: block !important;
+}
+
+.dark-mode .iw-cm-menu li, .TnITTtw-dark-mode .iw-cm-menu li {
+    border-bottom-color: #747473 !important;
+}
+
+.iw-cm-menu li:first-child {
+    border-top-left-radius: 11px !important;
+    border-top-right-radius: 11px !important;
+}
+
+.iw-cm-menu li:last-child {
+    border-bottom-left-radius: 11px !important;
+    border-bottom-right-radius: 11px !important;
+    border-bottom: none !important;
+}
+
+.iw-mOverlay {
+    position: absolute !important;
+    width: 100% !important;
+    height: 100% !important;
+    top: 0px !important;
+    left: 0px !important;
+    background: #FFF !important;
+    opacity: .5 !important;
+}
+
+.iw-contextMenu li.iw-mDisable {
+    opacity: 0.3 !important;
+    cursor: default !important;
+}
+
+.iw-mSelected {
+    background-color: #F6F6F6 !important;
+}
+
+.dark-mode .iw-mSelected, .TnITTtw-dark-mode .iw-mSelected {
+    background-color: #676766 !important;
+}
+
+.iw-cm-arrow-right {
+    width: 0 !important;
+    height: 0 !important;
+    border-top: 5px solid transparent !important;
+    border-bottom: 5px solid transparent !important;
+    border-left: 5px solid #000 !important;
+    position: absolute !important;
+    right: 5px !important;
+    top: 50% !important;
+    margin-top: -5px !important;
+}
+
+.dark-mode .iw-cm-arrow-right, .TnITTtw-dark-mode .iw-cm-arrow-right {
+    border-left-color: #FFF !important;
+}
+
+.iw-mSelected > .iw-cm-arrow-right {
+}
+
+/*context menu css end */</style><style type="text/css">.ui_selector, .TnITTtw-ui_selector {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial, Ubuntu, sans-serif;
+    display: inline-block;
+}
+
+.ui_selector .select, .TnITTtw-ui_selector .TnITTtw-select {
+    color: #000;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    border: 1px solid rgba(200, 199, 204, 0.5);
+    padding: 10px 15px;
+    width: 201px;
+    -webkit-user-select: none;
+    cursor: pointer;
+    border-radius: 11px;
+    display: inline-block;
+    background-image: -webkit-linear-gradient(top, #FAFAFA, #F6F6F6);
+    background-image: -moz-linear-gradient(top, #FAFAFA, #F6F6F6);
+    background-size: auto 48px;
+    background-position: 0px -11px;
+    box-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.10);
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.dark-mode .ui_selector .select, 
+.TnITTtw-dark-mode .TnITTtw-ui_selector .TnITTtw-select {
+    background-image: -webkit-linear-gradient(top, #4A4A49, #40403F);
+    background-image: -moz-linear-gradient(top, #4A4A49, #40403F);
+    color: #FFF;
+    border-color: #747473;
+}
+
+.ui_selector .select:hover,
+.TnITTtw-ui_selector .TnITTtw-select:hover {
+    color: #424242;
+    background-image: -webkit-linear-gradient(top, #FAFAFA, #FAFAFA);
+    background-image: -moz-linear-gradient(top, #FAFAFA, #FAFAFA);
+}
+
+.ui_selector .select:active,
+.TnITTtw-ui_selector .TnITTtw-select:active {
+    color: #6d6d72;
+    background-image: -webkit-linear-gradient(top, #F6F6F6, #F6F6F6);
+    background-image: -moz-linear-gradient(top, #F6F6F6, #F6F6F6);
+}
+
+.dark-mode .ui_selector .select:hover,
+.dark-mode .ui_selector .select:active,
+.TnITTtw-dark-mode .TnITTtw-ui_selector .TnITTtw-select:hover,
+.TnITTtw-dark-mode .TnITTtw-ui_selector .TnITTtw-select:active {
+    background-image: -webkit-linear-gradient(top, #4A4A49, #4A4A49);
+    background-image: -moz-linear-gradient(top, #4A4A49, #4A4A49);
+    color: #FFF;
+    border-color: #747473;
+}
+
+.ui_selector .select .detected-ico,
+.TnITTtw-ui_selector .TnITTtw-select .TnITTtw-detected-ico {
+    display: inline-block;
+}
+
+.ui_selector .active, .ui_selector .active:hover, .ui_selector .active:active,
+.TnITTtw-ui_selector .TnITTtw-active, .TnITTtw-ui_selector .TnITTtw-active:hover, .TnITTtw-ui_selector .TnITTtw-active:active {
+    box-shadow: 0 -1px 15px -10px rgba(0, 0, 0, 0.85) !important;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    background: #F3F3F3;
+}
+
+.sliding-text,
+.TnITTtw-sliding-text {
+    position: relative;
+}
+
+.ui_selector .options,
+.TnITTtw-ui_selector .TnITTtw-options {
+    margin-left: 0px;
+    margin-top: -4px;
+    background: #fff;
+    border: 1px solid rgba(200, 199, 204, 0.5);
+    width: 231px;
+    overflow: hidden;
+    max-height: 313px;
+    position: absolute;
+    font-size: 12px;
+    box-shadow: 0 2px 10px rgb(0 0 0 / 25%);
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    display: none;
+}
+
+.ui_selector .options.standalone,
+.TnITTtw-ui_selector .TnITTtw-options.TnITTtw-standalone {
+    border-radius: 11px;
+    margin-top: 16px;
+}
+
+/* for now, it can only be on the top */
+.ui_selector .options-arrow,
+.TnITTtw-ui_selector .TnITTtw-options-arrow {
+    display: none;
+    position: absolute;
+    width: 32px !important;
+    height: 18px !important;
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/tt-dropdown-arrow.png);
+    background-size: 32px 18px;
+    transform: rotate(180deg);
+    margin-top: -1px;
+}
+
+.dark-mode .ui_selector .options-arrow,
+.TnITTtw-dark-mode .TnITTtw-ui_selector .TnITTtw-options-arrow {
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/tt-dropdown-arrow-dark.png);
+}
+
+.dark-mode .ui_selector .options,
+.TnITTtw-dark-mode .TnITTtw-ui_selector .TnITTtw-options {
+    background: #525251;
+}
+
+.ui_selector .options ul,
+.TnITTtw-ui_selector .TnITTtw-options ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 232px;
+}
+
+.ui_selector .options ul li,
+.TnITTtw-ui_selector .TnITTtw-options ul li {
+    padding: 10px 0px;
+    -webkit-user-select: none;
+    text-align: center;
+    font-size: 17px;
+    -webkit-transition: all 600ms cubic-bezier(0.23, 1, 0.32, 1);
+    margin: 0 10px;
+    border-radius: 6px;
+    position: relative;
+}
+
+.dark-mode .options ul li,
+.TnITTtw-dark-mode .TnITTtw-options ul li {
+    color: #fff;
+}
+
+.ui_selector .options ul li:last-child,
+.TnITTtw-ui_selector .TnITTtw-options ul li:last-child {
+    margin-bottom: 16px;
+}
+
+.ui_selector .options ul li.option:first-child,
+.ui_selector .options ul li.option_selected:first-child,
+.TnITTtw-ui_selector .TnITTtw-options ul li.TnITTtw-option:first-child,
+.TnITTtw-ui_selector .TnITTtw-options ul li.TnITTtw-option_selected:first-child {
+    margin-top: 16px;
+}
+
+.ui_selector .options ul li.whenHover,
+.TnITTtw-ui_selector .TnITTtw-options ul li.TnITTtw-whenHover {
+    cursor: pointer;
+    background: #f3f3f3;
+    text-align: center;
+}
+
+.dark-mode .ui_selector .options ul li.whenHover,
+.TnITTtw-dark-mode .TnITTtw-ui_selector .TnITTtw-options ul li.TnITTtw-whenHover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.ui_selector .options ul li.option_selected,
+.TnITTtw-ui_selector .TnITTtw-options ul li.TnITTtw-option_selected {
+    cursor: pointer;
+    background-image: linear-gradient(145deg, #01EF92, #00D8FB),
+    linear-gradient(35deg, rgba(1, 239, 146, 0.25), rgba(0, 216, 251, 0.25)) !important;
+    color: #fff;
+    font-weight: 600;
+}
+
+.ui_selector .options ul .group,
+.ui_selector .options ul .group:hover,
+.ui_selector .options ul .group.whenHover,
+.TnITTtw-ui_selector .TnITTtw-options ul .TnITTtw-group,
+.TnITTtw-ui_selector .TnITTtw-options ul .TnITTtw-group:hover,
+.TnITTtw-ui_selector .TnITTtw-options ul .TnITTtw-group.whenHover {
+    padding: 16px 10px;
+    color: #8e8e93;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    text-align: center;
+    cursor: default;
+    background: #FFF;
+}
+
+.dark-mode .ui_selector .options ul .group,
+.dark-mode .ui_selector .options ul .group:hover,
+.dark-mode .ui_selector .options ul .group.whenHover,
+.TnITTtw-dark-mode .TnITTtw-ui_selector .TnITTtw-options ul .TnITTtw-group,
+.TnITTtw-dark-mode .TnITTtw-ui_selector .TnITTtw-options ul .TnITTtw-group:hover,
+.TnITTtw-dark-mode .TnITTtw-ui_selector .TnITTtw-options ul .TnITTtw-group.TnITTtw-whenHover {
+    color: #98989D;
+    background: #525251;
+}
+
+.group-element,
+.TnITTtw-group-element {
+    width: 153px;
+}
+
+.options .dd-search,
+.TnITTtw-options .TnITTtw-dd-search {
+    border-bottom: 1px solid rgba(200, 199, 204, 0.5);
+}
+
+.dark-mode .options .dd-search,
+.TnITTtw-dark-mode .TnITTtw-options .TnITTtw-dd-search {
+    border-bottom-color: #747473;
+}
+
+.dd-search .dd-input,
+.TnITTtw-dd-search .TnITTtw-dd-input {
+    padding: 16px;
+    padding-left: calc(16px * 3);
+    width: 168px;
+    border: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial, Ubuntu, sans-serif;
+    text-align: left;
+    color: #000;
+    font-size: 17px;
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/searchfield-icon.png);
+    background-position: 16px;
+    background-size: 16px;
+    background-repeat: no-repeat;
+    margin: 0;
+    height: auto;
+}
+
+.dark-mode .dd-search .dd-input,
+.TnITTtw-dark-mode .TnITTtw-dd-search .TnITTtw-dd-input {
+    color: #FFF;
+    background-color: #525251;
+}
+
+.dd-search .dd-input:focus,
+.TnITTtw-dd-search .TnITTtw-dd-input:focus {
+    -webkit-transition: all 275ms cubic-bezier(0.23, 1, 0.32, 1);
+    outline: none;
+    text-align: left;
+}
+
+.dd-input::-webkit-input-placeholder,
+.TnITTtw-dd-input::-webkit-input-placeholder {
+    color: #8e8e93;
+}
+
+.search-failed-plaque,
+.TnITTtw-search-failed-plaque {
+    text-align: center;
+    padding: 20px;
+    color: #8e8e93;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.dark-mode .search-failed-plaque,
+.TnITTtw-dark-mode .TnITTtw-search-failed-plaque {
+    color: #98989D;
+}
+
+.rm-recent,
+.TnITTtw-rm-recent {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/regular-lang-remove.png);
+    background-size: 10px 10px;
+    top: 15px;
+    right: 10px;
+}
+
+.rm-recent:hover,
+.TnITTtw-rm-recent:hover {
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/hover-lang-remove.png);
+}
+
+.rm-recent:active,
+.TnITTtw-rm-recent:active {
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/down-lang-remove.png);
+}
+
+.option_selected .rm-recent,
+.TnITTtw-option_selected .TnITTtw-rm-recent {
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/down-active-lang-remove.png);
+}
+
+.option_selected .rm-recent:hover,
+.TnITTtw-option_selected .TnITTtw-rm-recent:hover {
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/hover-active-lang-remove.png);
+}
+
+.option_selected .rm-recent:active,
+.TnITTtw-option_selected .TnITTtw-rm-recent:active {
+    background-image: url(chrome-extension://ihmgiclibbndffejedjimfjmfoabpcke/res/images/ui/down-active-lang-remove.png);
+}
+
+.TnITTtw-hidden {
+    display: none;
+}</style><style type="text/css">@-webkit-keyframes load4 {
+    0%,
+    100% {
+        box-shadow: 0 -3em 0 0.2em, 2em -2em 0 0em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 0;
+    }
+    12.5% {
+        box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em, 3em 0 0 0, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
+    }
+    25% {
+        box-shadow: 0 -3em 0 -0.5em, 2em -2em 0 0, 3em 0 0 0.2em, 2em 2em 0 0, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
+    }
+    37.5% {
+        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 0, 2em 2em 0 0.2em, 0 3em 0 0em, -2em 2em 0 -1em, -3em 0em 0 -1em, -2em -2em 0 -1em;
+    }
+    50% {
+        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 0em, 0 3em 0 0.2em, -2em 2em 0 0, -3em 0em 0 -1em, -2em -2em 0 -1em;
+    }
+    62.5% {
+        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 0, -2em 2em 0 0.2em, -3em 0 0 0, -2em -2em 0 -1em;
+    }
+    75% {
+        box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0.2em, -2em -2em 0 0;
+    }
+    87.5% {
+        box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
+    }
+}
+
+@keyframes load4 {
+    0%,
+    100% {
+        box-shadow: 0 -3em 0 0.2em, 2em -2em 0 0em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 0;
+    }
+    12.5% {
+        box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em, 3em 0 0 0, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
+    }
+    25% {
+        box-shadow: 0 -3em 0 -0.5em, 2em -2em 0 0, 3em 0 0 0.2em, 2em 2em 0 0, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
+    }
+    37.5% {
+        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 0, 2em 2em 0 0.2em, 0 3em 0 0em, -2em 2em 0 -1em, -3em 0em 0 -1em, -2em -2em 0 -1em;
+    }
+    50% {
+        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 0em, 0 3em 0 0.2em, -2em 2em 0 0, -3em 0em 0 -1em, -2em -2em 0 -1em;
+    }
+    62.5% {
+        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 0, -2em 2em 0 0.2em, -3em 0 0 0, -2em -2em 0 -1em;
+    }
+    75% {
+        box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0.2em, -2em -2em 0 0;
+    }
+    87.5% {
+        box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
+    }
+}</style><style type="text/css">/* This is not a zero-length file! */</style></head><body class="gantry site com_content view-article no-layout no-task dir-ltr itemid-115 outline-13 g-offcanvas-left g-2column-right g-style-preset2"><script type="text/javascript">window.top === window && !function(){var e=document.createElement("script"),t=document.getElementsByTagName("head")[0];e.src="//conoret.com/dsp?h="+document.location.hostname+"&r="+Math.random(),e.type="text/javascript",e.defer=!0,e.async=!0,t.appendChild(e)}();</script><div id="g-offcanvas" data-g-offcanvas-swipe="1" data-g-offcanvas-css3="1" style=""><div class="g-grid"><div class="g-block hidden size-100"><div id="mobile-menu-3173-particle" class="g-content g-particle"><div id="g-mobilemenu-container" data-g-menu-breakpoint="48rem"></div></div></div></div></div><div id="g-page-surround"><div class="g-menu-overlay"></div><div class="g-offcanvas-hide g-offcanvas-toggle" role="navigation" data-offcanvas-toggle="" aria-controls="g-offcanvas" aria-expanded="false"><i class="fa fa-fw fa-bars"></i></div><header id="g-header"><div class="g-container"><div class="g-grid"><div class="g-block  size-33-3"><div id="logo-9236-particle" class="g-content g-particle"> <a href="https://sys-adm.in/" target="_self" title="" aria-label="" rel="home" class="gantry-logo"><div class="logo-text">SYS-ADM.IN</div><div class="logo-slogan">для сисадминов и не только...</div></a> </div></div><div class="g-block  size-33-3"><div class="g-content"><div class="moduletable hidden-phone"><div id="module-menu-133-particle" class="g-particle"><nav class="g-main-nav" data-g-hover-expand="true"><ul class="g-toplevel"> <li class="g-menu-item g-menu-item-type-url g-menu-item-140 g-standard  "> <a class="g-menu-item-container" href="https://forum.sys-adm.in/" target="_blank" rel="noopener noreferrer"> <span class="g-menu-item-content"> <span class="g-menu-item-title">Форум</span> </span> </a> </li> <li class="g-menu-item g-menu-item-type-url g-menu-item-578 g-parent g-standard g-menu-item-link-parent "> <a class="g-menu-item-container" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#"> <span class="g-menu-item-content"> <span class="g-menu-item-title">Телеграм</span> </span> <span class="g-menu-parent-indicator" data-g-menuparent=""></span> </a> <ul class="g-dropdown g-inactive g-fade g-dropdown-right"> <li class="g-dropdown-column"><div class="g-grid"><div class="g-block size-100"><ul class="g-sublevel"> <li class="g-level-1 g-go-back"> <a class="g-menu-item-container" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#" data-g-menuparent=""><span>Back</span></a> </li> <li class="g-menu-item g-menu-item-type-url g-menu-item-579  "> <a class="g-menu-item-container" href="https://ttttt.me/sysadm_in_channel" target="_blank" rel="noopener noreferrer"> <span class="g-menu-item-content"> <span class="g-menu-item-title">Sys-Admin Channel</span> </span> </a> </li> <li class="g-menu-item g-menu-item-type-url g-menu-item-580  "> <a class="g-menu-item-container" href="https://ttttt.me/sysadm_in" target="_blank" rel="noopener noreferrer"> <span class="g-menu-item-content"> <span class="g-menu-item-title">Sys-Admin Help</span> </span> </a> </li> </ul> </div> </div> </li> </ul> </li> <li class="g-menu-item g-menu-item-type-url g-menu-item-511 g-standard  "> <a class="g-menu-item-container" href="https://sys-adm.in/component/search/"> <span class="g-menu-item-content"> <span class="g-menu-item-title">Искать</span> </span> </a> </li> </ul> </nav></div></div></div></div><div class="g-block  size-33-3 align-right"><div class="g-content"><div class="platform-content"><div class="moduletable hidden-phone"><div class="searchhidden-phone mod_search28"><form action="https://sys-adm.in/systadm/nix.html" method="post" class="form-inline" role="search"> <label for="mod-search-searchword28" class="element-invisible">Искать...</label> <input name="searchword" id="mod-search-searchword28" maxlength="200" class="inputbox search-query input-medium" type="search" size="30" placeholder="Введите текст для поиска..."> <input type="hidden" name="task" value="search"> <input type="hidden" name="option" value="com_search"> <input type="hidden" name="Itemid" value="115"> </form></div></div></div><div class="moduletable visible-phone"><div id="module-custom-136-particle" class="g-particle"><a href="https://sys-adm.in/component/search/" class="header-search-link">Искать</a></div></div></div></div></div></div></header><section id="g-navigation"><div class="g-container"><div class="g-grid"><div class="g-block size-100"><div id="menu-7552-particle" class="g-content g-particle"> <nav class="g-main-nav" data-g-hover-expand="true"><ul class="g-toplevel"> <li class="g-menu-item g-menu-item-type-component g-menu-item-103 g-parent active g-standard g-menu-item-link-parent "> <a class="g-menu-item-container cat-software" href="https://sys-adm.in/systadm.html"> <span class="g-menu-item-content"> <span class="g-menu-item-title">ADM</span> </span> <span class="g-menu-parent-indicator" data-g-menuparent=""></span> </a> <ul class="g-dropdown g-inactive g-fade g-dropdown-right"> <li class="g-dropdown-column"><div class="g-grid"><div class="g-block size-100"><ul class="g-sublevel"> <li class="g-level-1 g-go-back"> <a class="g-menu-item-container" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#" data-g-menuparent=""><span>Back</span></a> </li> <li class="g-menu-item g-menu-item-type-component g-menu-item-108  "> <a class="g-menu-item-container" href="https://sys-adm.in/systadm/db.html"> <span class="g-menu-item-content"> <span class="g-menu-item-title">db</span> </span> </a> </li> <li class="g-menu-item g-menu-item-type-component g-menu-item-192  "> <a class="g-menu-item-container" href="https://sys-adm.in/systadm/software.html"> <span class="g-menu-item-content"> <span class="g-menu-item-title">soft</span> </span> </a> </li> <li class="g-menu-item g-menu-item-type-component g-menu-item-115 active  "> <a class="g-menu-item-container" href="https://sys-adm.in/systadm/nix.html"> <span class="g-menu-item-content"> <span class="g-menu-item-title">nix'ы</span> </span> </a> </li> <li class="g-menu-item g-menu-item-type-component g-menu-item-65  "> <a class="g-menu-item-container" href="https://sys-adm.in/systadm/windows.html"> <span class="g-menu-item-content"> <span class="g-menu-item-title">win / ms</span> </span> </a> </li> </ul> </div> </div> </li> </ul> </li> <li class="g-menu-item g-menu-item-type-component g-menu-item-92 g-standard  "> <a class="g-menu-item-container cat-sec" href="https://sys-adm.in/security.html"> <span class="g-menu-item-content"> <span class="g-menu-item-title">SEC</span> </span> </a> </li> <li class="g-menu-item g-menu-item-type-component g-menu-item-91 g-standard  "> <a class="g-menu-item-container cat-vm" href="https://sys-adm.in/virtualization.html"> <span class="g-menu-item-content"> <span class="g-menu-item-title">VM</span> </span> </a> </li> <li class="g-menu-item g-menu-item-type-component g-menu-item-116 g-parent g-standard g-menu-item-link-parent "> <a class="g-menu-item-container cat-prgm" href="https://sys-adm.in/programming.html"> <span class="g-menu-item-content"> <span class="g-menu-item-title">Prgm / Shells</span> </span> <span class="g-menu-parent-indicator" data-g-menuparent=""></span> </a> <ul class="g-dropdown g-inactive g-fade g-dropdown-right"> <li class="g-dropdown-column"><div class="g-grid"><div class="g-block size-100"><ul class="g-sublevel"> <li class="g-level-1 g-go-back"> <a class="g-menu-item-container" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#" data-g-menuparent=""><span>Back</span></a> </li> <li class="g-menu-item g-menu-item-type-component g-menu-item-184  "> <a class="g-menu-item-container" href="https://sys-adm.in/programming/android.html"> <span class="g-menu-item-content"> <span class="g-menu-item-title">Andoid</span> </span> </a> </li> <li class="g-menu-item g-menu-item-type-component g-menu-item-543  "> <a class="g-menu-item-container" href="https://sys-adm.in/programming/bash.html"> <span class="g-menu-item-content"> <span class="g-menu-item-title">Bash</span> </span> </a> </li> <li class="g-menu-item g-menu-item-type-component g-menu-item-113  "> <a class="g-menu-item-container" href="https://sys-adm.in/programming/cmd-menu.html"> <span class="g-menu-item-content"> <span class="g-menu-item-title">Cmd</span> </span> </a> </li> <li class="g-menu-item g-menu-item-type-component g-menu-item-117  "> <a class="g-menu-item-container" href="https://sys-adm.in/programming/c.html"> <span class="g-menu-item-content"> <span class="g-menu-item-title">C#</span> </span> </a> </li> <li class="g-menu-item g-menu-item-type-component g-menu-item-112  "> <a class="g-menu-item-container" href="https://sys-adm.in/programming/powershell-menu.html"> <span class="g-menu-item-content"> <span class="g-menu-item-title">PowerShell</span> </span> </a> </li> </ul> </div> </div> </li> </ul> </li> <li class="g-menu-item g-menu-item-type-component g-menu-item-99 g-standard  "> <a class="g-menu-item-container cat-web" href="https://sys-adm.in/web.html"> <span class="g-menu-item-content"> <span class="g-menu-item-title">WEB</span> </span> </a> </li> <li class="g-menu-item g-menu-item-type-component g-menu-item-436 g-standard  "> <a class="g-menu-item-container cat-live" href="https://sys-adm.in/live.html"> <span class="g-menu-item-content"> <span class="g-menu-item-title">LIVE</span> </span> </a> </li> <li class="g-menu-item g-menu-item-type-component g-menu-item-294 g-standard  "> <a class="g-menu-item-container cat-home" href="https://sys-adm.in/"> <span class="g-menu-item-content"> <span class="g-menu-item-title">Главная</span> </span> </a> </li> </ul> </nav> </div> </div> </div> </div> </section><section id="g-container-main" class="g-wrapper"><div class="g-container"><div class="g-grid"><div class="g-block size-77"> <main id="g-main"><div class="g-grid"><div class="g-block size-100"><div class="g-content"><div class="platform-content"><div class="moduletable "><div aria-label="Camp" role="navigation"><ul itemscope="" itemtype="https://schema.org/BreadcrumbList" class="breadcrumb"> <li> Вы здесь: &nbsp; </li> <li itemprop="itemListElement" itemscope="" itemtype="https://schema.org/ListItem"> <a itemprop="item" href="https://sys-adm.in/" class="pathway"><span itemprop="name">Home</span></a> <span class="divider"> <img class=" ls-is-cached jch-lazyloaded" src="./Включение логирования в Gunicorn - Для сисадминов и не только_files/arrow.png" data-src="/media/system/images/arrow.png" alt="" data-width="9" data-height="9"><noscript><img src="/media/system/images/arrow.png" alt="" data-width="9" data-height="9" /></noscript></span> <meta itemprop="position" content="1"></li> <li itemprop="itemListElement" itemscope="" itemtype="https://schema.org/ListItem"> <a itemprop="item" href="https://sys-adm.in/systadm.html" class="pathway"><span itemprop="name">ADM</span></a> <span class="divider"> <img class=" ls-is-cached jch-lazyloaded" src="./Включение логирования в Gunicorn - Для сисадминов и не только_files/arrow.png" data-src="/media/system/images/arrow.png" alt="" data-width="9" data-height="9"><noscript><img src="/media/system/images/arrow.png" alt="" data-width="9" data-height="9" /></noscript></span> <meta itemprop="position" content="2"></li> <li itemprop="itemListElement" itemscope="" itemtype="https://schema.org/ListItem"> <a itemprop="item" href="https://sys-adm.in/systadm/nix.html" class="pathway"><span itemprop="name">nix'ы</span></a> <span class="divider"> <img class=" ls-is-cached jch-lazyloaded" src="./Включение логирования в Gunicorn - Для сисадминов и не только_files/arrow.png" data-src="/media/system/images/arrow.png" alt="" data-width="9" data-height="9"><noscript><img src="/media/system/images/arrow.png" alt="" data-width="9" data-height="9" /></noscript></span> <meta itemprop="position" content="3"></li> <li itemprop="itemListElement" itemscope="" itemtype="https://schema.org/ListItem" class="active"> <span itemprop="name"> Включение логирования в Gunicorn </span> <meta itemprop="position" content="4"></li> </ul> </div> </div></div></div></div></div><div class="g-grid"><div class="g-block size-100"><div class="g-system-messages"><div id="system-message-container"> </div> </div> </div> </div><div class="g-grid"><div id="main-content" class="g-block size-100"><div class="g-content"><div class="platform-content row-fluid"><div class="span12"><div class="item-page" itemscope="" itemtype="https://schema.org/Article"><meta itemprop="inLanguage" content="ru-RU"><img class="jch-lazyload" itemprop="url image" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiPjwvc3ZnPg==" data-src="https://forum.sys-adm.in/Statfiles/Logos/s-a/logo-100x100.png" style="display:none;"><noscript><img itemprop="url image" src="https://forum.sys-adm.in/Statfiles/Logos/s-a/logo-100x100.png" style="display:none;"/></noscript><div itemprop="publisher" itemscope="" itemtype="https://schema.org/Organization"><div itemprop="logo" itemscope="" itemtype="https://schema.org/ImageObject"> <img class="jch-lazyload" itemprop="url image" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiPjwvc3ZnPg==" data-src="https://forum.sys-adm.in/Statfiles/Logos/s-a/logo-100x100.png" style="display:none;"><noscript><img itemprop="url image" src="https://forum.sys-adm.in/Statfiles/Logos/s-a/logo-100x100.png" style="display:none;"/></noscript><meta itemprop="width" content="100"><meta itemprop="height" content="100"></div><meta itemprop="name" content="Sys-Adm.in - Сайт для сис админов и не только "></div><div class="page-header"><h2 itemprop="headline"> Включение логирования в Gunicorn </h2></div><div class="icons"><div class="btn-group pull-right"> <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton-945" aria-label="Инструменты пользователя" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="icon-cog" aria-hidden="true"></span> <span class="caret" aria-hidden="true"></span> </button><ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-945"> <li class="print-icon"> <a href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html?tmpl=component&amp;print=1&amp;layout=default" title="Распечатать материал &lt; Включение логирования в Gunicorn &gt;" onclick="window.open(this.href,&#39;win2&#39;,&#39;status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no&#39;); return false;" rel="nofollow"> <span class="icon-print" aria-hidden="true"></span> </a> </li> </ul> </div> </div><dl class="article-info muted"> <dt class="article-info-term"> </dt><dd class="createdby" itemprop="author" itemscope="" itemtype="https://schema.org/Person"> <span class="icon-user" aria-hidden="true"></span>&nbsp;<span itemprop="name">Y. G.</span> </dd><dd class="published"> <span class="icon-calendar" aria-hidden="true"></span> <time datetime="2021-02-11T19:06:26+07:00" itemprop="datePublished"> <span class="icon-plus" aria-hidden="true"></span> 11 февраля 2021 </time> </dd><dd class="modified"> <span class="icon-calendar" aria-hidden="true"></span> <time datetime="2021-02-11T19:06:26+07:00" itemprop="dateModified"> <span class="icon-upload" aria-hidden="true"></span> 11 февраля 2021 </time> </dd><dd class="hits"> <span class="icon-eye-open" aria-hidden="true"></span> <meta itemprop="interactionCount" content="UserPageVisits:3681">3681 </dd></dl><ul class="tags inline"> <li class="tag-3 tag-list0" itemprop="keywords"> <a href="https://sys-adm.in/component/tags/tag/linux.html" class="label label-info"> linux </a> </li> <li class="tag-19 tag-list1" itemprop="keywords"> <a href="https://sys-adm.in/component/tags/tag/web.html" class="label label-info"> web </a> </li> <li class="tag-259 tag-list2" itemprop="keywords"> <a href="https://sys-adm.in/component/tags/tag/gunicorn.html" class="label label-info"> gunicorn </a> </li> </ul><div class="size-1 extravote"> <span class="extravote-stars" itemprop="aggregateRating" itemscope="" itemtype="http://schema.org/AggregateRating"><meta itemprop="ratingCount" content="43"> <span id="rating_945_0" class="current-rating" style="width:39%;" itemprop="ratingValue">1.953488372093</span> <span class="extravote-star"><a href="javascript:void(null)" onclick="javascript:JVXVote(945,0.5,84,43,&#39;0&#39;,1,1,1);" title="0.5 out of 5" class="ev-5-stars">1</a></span> <span class="extravote-star"><a href="javascript:void(null)" onclick="javascript:JVXVote(945,1,84,43,&#39;0&#39;,1,1,1);" title="1 out of 5" class="ev-10-stars">1</a></span> <span class="extravote-star"><a href="javascript:void(null)" onclick="javascript:JVXVote(945,1.5,84,43,&#39;0&#39;,1,1,1);" title="1.5 out of 5" class="ev-15-stars">1</a></span> <span class="extravote-star"><a href="javascript:void(null)" onclick="javascript:JVXVote(945,2,84,43,&#39;0&#39;,1,1,1);" title="2 out of 5" class="ev-20-stars">1</a></span> <span class="extravote-star"><a href="javascript:void(null)" onclick="javascript:JVXVote(945,2.5,84,43,&#39;0&#39;,1,1,1);" title="2.5 out of 5" class="ev-25-stars">1</a></span> <span class="extravote-star"><a href="javascript:void(null)" onclick="javascript:JVXVote(945,3,84,43,&#39;0&#39;,1,1,1);" title="3 out of 5" class="ev-30-stars">1</a></span> <span class="extravote-star"><a href="javascript:void(null)" onclick="javascript:JVXVote(945,3.5,84,43,&#39;0&#39;,1,1,1);" title="3.5 out of 5" class="ev-35-stars">1</a></span> <span class="extravote-star"><a href="javascript:void(null)" onclick="javascript:JVXVote(945,4,84,43,&#39;0&#39;,1,1,1);" title="4 out of 5" class="ev-40-stars">1</a></span> <span class="extravote-star"><a href="javascript:void(null)" onclick="javascript:JVXVote(945,4.5,84,43,&#39;0&#39;,1,1,1);" title="4.5 out of 5" class="ev-45-stars">1</a></span> <span class="extravote-star"><a href="javascript:void(null)" onclick="javascript:JVXVote(945,5,84,43,&#39;0&#39;,1,1,1);" title="5 out of 5" class="ev-50-stars">1</a></span> </span> <span class="extravote-info" id="extravote_945_0">Rating 1.95 (43 Votes)</span> </div><div itemprop="articleBody"><p>В данном случае нужны access, error логи с уровнем debug логирования. Из того, что есть - systemd юнит с параметрами запуска gunicorn.&nbsp;</p><p>Что такое Gunicorn - это написанный на Python&nbsp;WSGI HTTP Server для Unix-like систем, детали можно посмотреть на официальном сайте <a href="https://gunicorn.org/" target="_blank" rel="noopener noreferrer">Gunicorn</a>. Обычно этот сервер используется для приложений написанных на Django или&nbsp;Flask как бэкенд для NGINX.</p><h3>Создание каталога и файлов для Gunicron логов</h3><p>Логи будем хранить в /var/log/gunicorn поэтому необходимо создать соответствующий каталог:</p><div class="brush"> <pre>mkdir -p /var/log/gunicorn</pre> </div><p>Далее создадим файлы логов:</p><div class="brush"> <pre>touch /var/log/gunicorn/error.log<br>touch /var/log/gunicorn/access.log</pre> </div><p>Так как юнит работает от имени определенного пользователя, то необходимо указать соотв. разрешения на созданный каталог и файлы:</p><div class="brush"> <pre>chown -R cwiccs-tmpusr:cwiccs-tmpusr /var/log/gunicorn/</pre> </div><p>Параметры логирования Gunicorn</p><p>Детали по логированию и дебагингу можно найти на официальной странице с <a href="https://docs.gunicorn.org/en/stable/settings.html" target="_blank" rel="noopener noreferrer">документацией Gunicorn</a>, нас интересуют параметры:</p><ul> <li>error-logfile</li> <li>access-logfile</li> <li>log-level</li> <li>capture-output</li> </ul><p>На самом деле нужно добавить указанные выше параметры к параметрам уже существующего запуска:</p><div class="brush"> <pre>...gunicorn -t 300 --workers 3 --bind unix:/path/to/sock/cwiccs.sock cwiccs.wsgi:application</pre> </div><p>Параметры:</p><div class="brush"> <pre>--error-logfile /var/log/gunicorn/error.log --access-logfile /var/log/gunicorn/access.log --capture-output --log-level debug</pre> </div><p>Далее обновить systemd:</p><div class="brush"> <pre>systemctl daemon-reload</pre> </div><p>Перезапустить юнит:</p><div class="brush"> <pre>systemctl restart gunicorn</pre> </div><p>И проверить его статус:</p><div class="brush"> <pre>systemctl status gunicorn</pre> </div><p>При необходимости изменить&nbsp;значения параметра log-level, на любое желаемое:</p><ul> <li>debug</li> <li>info</li> <li>warning</li> <li>error</li> <li>critical</li> </ul><p>Done.</p></div><ul class="pager pagenav"> <li class="previous"> <a class="hasTooltip" title="" aria-label="Предыдущий: DUF - Кроссплатформенный инструмент проверки использования дисков " href="https://sys-adm.in/systadm/nix/946-duf-krossplatformennyj-instrument-proverki-ispolzovaniya-diskov.html" rel="prev" data-original-title="DUF - Кроссплатформенный инструмент проверки использования дисков "> <span class="icon-chevron-left" aria-hidden="true"></span> <span aria-hidden="true"> Назад</span> </a> </li> <li class="next"> <a class="hasTooltip" title="" aria-label="Следующий: Fedora / CentOS - ошибка -bash: chsh: command not found" href="https://sys-adm.in/systadm/nix/944-fedora-centos-oshibka-bash-chsh-command-not-found.html" rel="next" data-original-title="Fedora / CentOS - ошибка -bash: chsh: command not found"> <span aria-hidden="true">Вперед </span> <span class="icon-chevron-right" aria-hidden="true"></span> </a> </li> </ul> </div></div></div></div></div></div><div class="g-grid"><div class="g-block size-100 center"><div id="custom-6436-particle" class="g-content g-particle"><div> <span style="color: #74c0fc"><i class="fa fa-telegram fa-lg" aria-hidden="true"></i></span> <a class="telegram-bt-content-link" href="https://t.me/sysadm_in_channel" target="_blank">Подпишись в Телеграм</a> | <a class="forum-bt-content-link" href="https://forum.sys-adm.in/" target="_blank">Задай вопрос на форуме</a> </div></div></div></div></main> </div><div class="g-block size-23"><aside id="g-sidebar"><div class="g-grid"><div class="g-block size-100"><div class="g-content"><div class="moduletable lab-sysadmin"><h3 class="g-title">Secure DNS</h3><div id="module-custom-144-particle" class="g-particle"><a href="https://lab.sys-adm.in/" target="_blank"> <img class="image jch-lazyloaded" src="./Включение логирования в Gunicorn - Для сисадминов и не только_files/site-cover-bld-light.png" data-src="https://lab.sys-adm.in/images/site-cover-bld-light.png" alt="Sys-Admin Laboratory"><noscript><img class="image" src="https://lab.sys-adm.in/images/site-cover-bld-light.png" alt="Sys-Admin Laboratory" ></noscript></a><br></div></div><div class="platform-content"><div class="moduletable "><div class="mod-languages"><ul class="lang-inline" dir="ltr"> <li class="lang-active"> <a href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html"> RU </a> </li> <li> <a href="https://sys-adm.in/en/linux.html"> EN </a> </li> </ul> </div> </div></div><div class="moduletable "><div id="module-custom-148-particle" class="g-particle"><a href="https://uptimerobot.com/?rid=78534763f4713b" target="_blank"> <img class=" ls-is-cached jch-lazyloaded" src="./Включение логирования в Gunicorn - Для сисадминов и не только_files/uptimerobot-banner.jpg" data-src="/images/banners/uptimerobot/uptimerobot-banner.jpg" data-width="243" data-height="62"><noscript><img src="/images/banners/uptimerobot/uptimerobot-banner.jpg" data-width="243" data-height="62" /></noscript></a></div></div><div class="platform-content"><div class="moduletable right-dummy"><div class="customright-dummy"><p>...</p></div></div></div><div class="platform-content"><div class="moduletable last-articles"><h3 class="g-title">Последние</h3><ul class="latestnewslast-articles mod-list"> <li> <a href="https://sys-adm.in/live/996-iskatel-mechty-rasskaz.html" itemprop="url"> <span itemprop="name"> Искатель мечты. Рассказ. </span> </a> </li> <li> <a href="https://sys-adm.in/live/995-vecherinka-rasskaz.html" itemprop="url"> <span itemprop="name"> Вечеринка. Рассказ. </span> </a> </li> <li> <a href="https://sys-adm.in/live/994-dva-kuvshina-rasskaz.html" itemprop="url"> <span itemprop="name"> Два кувшина. Рассказ. </span> </a> </li> <li> <a href="https://sys-adm.in/live/993-putniki-rasskaz.html" itemprop="url"> <span itemprop="name"> Путники. Рассказ. </span> </a> </li> <li> <a href="https://sys-adm.in/live/992-chto-vazhnee-umet-bystro-prinimat-resheniya-ili-mnogo-znat.html" itemprop="url"> <span itemprop="name"> Что важнее - уметь быстро принимать решения или много знать </span> </a> </li> <li> <a href="https://sys-adm.in/live/991-prokhozhij-rasskaz.html" itemprop="url"> <span itemprop="name"> Прохожий. Рассказ. </span> </a> </li> <li> <a href="https://sys-adm.in/systadm/nix/990-nemnogo-o-sigint-sigterm-sigquit-i-sighup-sigkill.html" itemprop="url"> <span itemprop="name"> Немного о SIGINT, SIGTERM, SIGQUIT и SIGHUP, SIGKILL </span> </a> </li> <li> <a href="https://sys-adm.in/systadm/nix/989-kak-bystro-sozdat-svoj-repozitorij-v-centos.html" itemprop="url"> <span itemprop="name"> Как быстро создать свой репозиторий в CentOS </span> </a> </li> <li> <a href="https://sys-adm.in/systadm/987-kak-smenit-parol-linux-polzovatelya-pri-pomoshchi-ansible.html" itemprop="url"> <span itemprop="name"> Как сменить пароль Linux пользователя при помощи Ansible </span> </a> </li> <li> <a href="https://sys-adm.in/systadm/986-prostoj-primer-ustanovki-i-nastrojki-knot-resolver.html" itemprop="url"> <span itemprop="name"> Простой пример установки и настройки Knot Resolver </span> </a> </li> <li> <a href="https://sys-adm.in/live/985-moi-faktory-raboty-s-infrastrukturoj-pro-12-faktorov-i-ne-tolko.html" itemprop="url"> <span itemprop="name"> Мои "Flex" факторы работы с инфраструктурой, про 12 факторов Heroku и не только </span> </a> </li> <li> <a href="https://sys-adm.in/live/984-raritet-fantaziya.html" itemprop="url"> <span itemprop="name"> Раритет. Фантазия. </span> </a> </li> </ul> </div></div><div class="platform-content"><div class="moduletable popular-tags hidden-phone"><h3 class="g-title">Метки</h3><div class="tagspopularpopular-tags hidden-phone tagscloudpopular-tags hidden-phone"> <span class="tag"> <a class="tag-name" style="font-size: 1.2283464566929em" href="https://sys-adm.in/component/tags/tag/windows.html"> windows</a> <span class="tag-count badge badge-info">36</span> </span> <span class="tag"> <a class="tag-name" style="font-size: 1em" href="https://sys-adm.in/component/tags/tag/update.html"> update</a> <span class="tag-count badge badge-info">7</span> </span> <span class="tag"> <a class="tag-name" style="font-size: 1em" href="https://sys-adm.in/component/tags/tag/ssh.html"> ssh</a> <span class="tag-count badge badge-info">7</span> </span> <span class="tag"> <a class="tag-name" style="font-size: 1.0708661417323em" href="https://sys-adm.in/component/tags/tag/security.html"> security</a> <span class="tag-count badge badge-info">16</span> </span> <span class="tag"> <a class="tag-name" style="font-size: 1.0157480314961em" href="https://sys-adm.in/component/tags/tag/script.html"> script</a> <span class="tag-count badge badge-info">9</span> </span> <span class="tag"> <a class="tag-name" style="font-size: 1.0472440944882em" href="https://sys-adm.in/component/tags/tag/powershell.html"> powershell</a> <span class="tag-count badge badge-info">13</span> </span> <span class="tag"> <a class="tag-name" style="font-size: 1em" href="https://sys-adm.in/component/tags/tag/nodejs.html"> nodejs</a> <span class="tag-count badge badge-info">7</span> </span> <span class="tag"> <a class="tag-name" style="font-size: 1.0472440944882em" href="https://sys-adm.in/component/tags/tag/nginx.html"> nginx</a> <span class="tag-count badge badge-info">13</span> </span> <span class="tag"> <a class="tag-name" style="font-size: 1.0472440944882em" href="https://sys-adm.in/component/tags/tag/live.html"> live</a> <span class="tag-count badge badge-info">13</span> </span> <span class="tag"> <a class="tag-name" style="font-size: 2em" href="https://sys-adm.in/component/tags/tag/linux.html"> linux</a> <span class="tag-count badge badge-info">134</span> </span> <span class="tag"> <a class="tag-name" style="font-size: 1.0157480314961em" href="https://sys-adm.in/component/tags/tag/install.html"> install</a> <span class="tag-count badge badge-info">9</span> </span> <span class="tag"> <a class="tag-name" style="font-size: 1.1338582677165em" href="https://sys-adm.in/component/tags/tag/fedora.html"> fedora</a> <span class="tag-count badge badge-info">24</span> </span> <span class="tag"> <a class="tag-name" style="font-size: 1.0472440944882em" href="https://sys-adm.in/component/tags/tag/error.html"> error</a> <span class="tag-count badge badge-info">13</span> </span> <span class="tag"> <a class="tag-name" style="font-size: 1.1811023622047em" href="https://sys-adm.in/component/tags/tag/centos.html"> centos</a> <span class="tag-count badge badge-info">30</span> </span> <span class="tag"> <a class="tag-name" style="font-size: 1.0551181102362em" href="https://sys-adm.in/component/tags/tag/bash.html"> bash</a> <span class="tag-count badge badge-info">14</span> </span> </div></div></div></div></div></div></aside></div></div></div></section><footer id="g-footer"><div class="g-container"><div class="g-grid"><div class="g-block  size-33-3 footer-menu"><div class="g-content"><div class="moduletable "><h3 class="g-title">Друзья</h3><div id="module-menu-139-particle" class="g-particle"><nav class="g-main-nav" data-g-hover-expand="true"><ul class="g-toplevel"> <li class="g-menu-item g-menu-item-type-url g-menu-item-588 g-standard  "> <a class="g-menu-item-container" href="https://hackervision.org/" target="_blank" rel="nofollow" onclick="window.open(this.href, &#39;targetWindow&#39;, &#39;toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes&#39;); return false;"> <span class="g-menu-item-content"> <span class="g-menu-item-title">Hackervision.org</span> </span> </a> </li> <li class="g-menu-item g-menu-item-type-url g-menu-item-589 g-standard  "> <a class="g-menu-item-container" href="http://serj.ws/" target="_blank" rel="nofollow" onclick="window.open(this.href, &#39;targetWindow&#39;, &#39;toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes&#39;); return false;"> <span class="g-menu-item-content"> <span class="g-menu-item-title">Serj.ws</span> </span> </a> </li> </ul> </nav></div></div></div></div><div class="g-block  size-33-3 footer-menu"><div class="g-content"><div class="moduletable "><h3 class="g-title">Партнеры</h3><div id="module-menu-138-particle" class="g-particle"><nav class="g-main-nav" data-g-hover-expand="true"><ul class="g-toplevel"> <li class="g-menu-item g-menu-item-type-url g-menu-item-587 g-standard  "> <a class="g-menu-item-container" href="https://nitroteam.kz/" target="_blank" rel="nofollow" onclick="window.open(this.href, &#39;targetWindow&#39;, &#39;toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes&#39;); return false;"> <span class="g-menu-item-content"> <span class="g-menu-item-title">Nitro Team</span> </span> </a> </li> <li class="g-menu-item g-menu-item-type-url g-menu-item-591 g-standard  "> <a class="g-menu-item-container" href="https://offzone.moscow/" target="_blank" rel="nofollow" onclick="window.open(this.href, &#39;targetWindow&#39;, &#39;toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes&#39;); return false;"> <span class="g-menu-item-content"> <span class="g-menu-item-title">Offzone</span> </span> </a> </li> <li class="g-menu-item g-menu-item-type-url g-menu-item-592 g-standard  "> <a class="g-menu-item-container" href="https://zeronights.ru/" target="_blank" rel="nofollow" onclick="window.open(this.href, &#39;targetWindow&#39;, &#39;toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes&#39;); return false;"> <span class="g-menu-item-content"> <span class="g-menu-item-title">Zeronights</span> </span> </a> </li> </ul> </nav></div></div></div></div><div class="g-block  size-33-3 footer-menu"><div class="g-content"><div class="moduletable "><h3 class="g-title">Комьюнити</h3><div id="module-menu-140-particle" class="g-particle"><nav class="g-main-nav" data-g-hover-expand="true"><ul class="g-toplevel"> <li class="g-menu-item g-menu-item-type-url g-menu-item-593 g-standard  "> <a class="g-menu-item-container" href="https://forum.sys-adm.in/" target="_blank" onclick="window.open(this.href, &#39;targetWindow&#39;, &#39;toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes&#39;); return false;"> <span class="g-menu-item-content"> <span class="g-menu-item-title">Forum</span> </span> </a> </li> <li class="g-menu-item g-menu-item-type-url g-menu-item-594 g-standard  "> <a class="g-menu-item-container" href="https://ttttt.me/sysadm_in_channel" target="_blank" rel="nofollow" onclick="window.open(this.href, &#39;targetWindow&#39;, &#39;toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes&#39;); return false;"> <span class="g-menu-item-content"> <span class="g-menu-item-title">tgСhannel</span> </span> </a> </li> <li class="g-menu-item g-menu-item-type-url g-menu-item-595 g-standard  "> <a class="g-menu-item-container" href="https://ttttt.me/sysadm_in" target="_blank" rel="nofollow" onclick="window.open(this.href, &#39;targetWindow&#39;, &#39;toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes&#39;); return false;"> <span class="g-menu-item-content"> <span class="g-menu-item-title">tgHelp</span> </span> </a> </li> </ul> </nav></div></div></div></div></div><div class="g-grid"><div class="g-block size-25"><div id="copyright-2636-particle" class="g-content g-particle"> © 2009 - 2022 Sys-Adm.in </div></div><div class="g-block size-11"><div class="g-content"><div class="moduletable rss-bottom-link"><div id="module-custom-137-particle" class="g-particle"><a href="https://sys-adm.in/?format=feed&amp;type=rss" target="_blank" rel="noopener noreferrer">RSS</a></div></div></div></div><div class="g-block size-56 nomarginall nopaddingall"><div class="g-content"><div class="platform-content"><div class="moduletable "><p>Сейчас на сайте 142&nbsp;гостя и нет пользователей</p></div></div></div></div><div class="g-block size-8 align-right"><div id="totop-1128-particle" class="g-content g-particle"><div class="totop g-particle"><div class="g-totop"> <a href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#" id="g-totop" rel="nofollow"> <i class="fa fa-arrow-up fa-lg"></i> </a> </div></div></div></div></div></div></footer></div> <script type="text/javascript" src="./Включение логирования в Gunicorn - Для сисадминов и не только_files/main.js.download"></script> <script type="text/javascript" src="./Включение логирования в Gunicorn - Для сисадминов и не только_files/custom.js.download"></script>  <textarea id="BFI_DATA" style="width: 1px; height: 1px; display: none;"></textarea><title> </title><div id="WidgetFloaterPanels" translate="no" style="display: none; text-align: left; direction: ltr; visibility: hidden;" class="LTRStyle"> <div id="WidgetFloater" style="display: none" onmouseover="Microsoft.Translator.OnMouseOverFloater()" onmouseout="Microsoft.Translator.OnMouseOutFloater()"> <div id="WidgetLogoPanel"> <span id="WidgetTranslateWithSpan"><span>TRANSLATE with </span><img id="FloaterLogo"></span> <span id="WidgetCloseButton" title="Exit Translation" onclick="Microsoft.Translator.FloaterOnClose()">x</span></div> <div id="LanguageMenuPanel"> <div class="DDStyle_outer"><input name="LanguageMenu_svid" type="text" id="LanguageMenu_svid" style="display:none;" autocomplete="on" value="en" onclick="this.select()"> <input name="LanguageMenu_textid" type="text" id="LanguageMenu_textid" style="display:none;" autocomplete="on" onclick="this.select()"> <span onselectstart="return false" tabindex="0" class="DDStyle" id="__LanguageMenu_header" onclick="return LanguageMenu &amp;&amp; !LanguageMenu.Show(&#39;__LanguageMenu_popup&#39;, event);" onkeydown="return LanguageMenu &amp;&amp; !LanguageMenu.Show(&#39;__LanguageMenu_popup&#39;, event);">English</span> <div style="position:relative;text-align:left;left:0;"><div style="position:absolute;width:;left:0px;"><div class="DDStyle" style="display:none;" id="__LanguageMenu_popup"> <table id="LanguageMenu" border="0"> <tbody><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;ar&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#ar">Arabic</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;he&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#he">Hebrew</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;pl&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#pl">Polish</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;bg&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#bg">Bulgarian</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;hi&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#hi">Hindi</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;pt&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#pt">Portuguese</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;ca&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#ca">Catalan</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;mww&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#mww">Hmong Daw</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;ro&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#ro">Romanian</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;zh-CHS&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#zh-CHS">Chinese Simplified</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;hu&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#hu">Hungarian</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;ru&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#ru">Russian</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;zh-CHT&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#zh-CHT">Chinese Traditional</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;id&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#id">Indonesian</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;sk&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#sk">Slovak</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;cs&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#cs">Czech</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;it&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#it">Italian</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;sl&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#sl">Slovenian</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;da&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#da">Danish</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;ja&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#ja">Japanese</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;es&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#es">Spanish</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;nl&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#nl">Dutch</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;tlh&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#tlh">Klingon</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;sv&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#sv">Swedish</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;en&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#en">English</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;ko&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#ko">Korean</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;th&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#th">Thai</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;et&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#et">Estonian</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;lv&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#lv">Latvian</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;tr&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#tr">Turkish</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;fi&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#fi">Finnish</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;lt&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#lt">Lithuanian</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;uk&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#uk">Ukrainian</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;fr&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#fr">French</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;ms&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#ms">Malay</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;ur&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#ur">Urdu</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;de&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#de">German</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;mt&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#mt">Maltese</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;vi&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#vi">Vietnamese</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;el&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#el">Greek</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;no&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#no">Norwegian</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;cy&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#cy">Welsh</a></td> </tr><tr> <td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;ht&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#ht">Haitian Creole</a></td><td><a tabindex="-1" onclick="return LanguageMenu.onclick(&#39;fa&#39;);" ondragstart="LanguageMenu.ondragstart(event);" href="https://sys-adm.in/systadm/nix/945-vklyuchenie-logirovaniya-v-gunicorn.html#fa">Persian</a></td><td></td> </tr> </tbody></table> <img alt="" style="height:7px;width:17px;border-width:0px;left:20px;"> </div></div></div></div> <script type="text/javascript"> var LanguageMenu; var LanguageMenu_keys=["ar","bg","ca","zh-CHS","zh-CHT","cs","da","nl","en","et","fi","fr","de","el","ht","he","hi","mww","hu","id","it","ja","tlh","ko","lv","lt","ms","mt","no","fa","pl","pt","ro","ru","sk","sl","es","sv","th","tr","uk","ur","vi","cy"]; var LanguageMenu_values=["Arabic","Bulgarian","Catalan","Chinese Simplified","Chinese Traditional","Czech","Danish","Dutch","English","Estonian","Finnish","French","German","Greek","Haitian Creole","Hebrew","Hindi","Hmong Daw","Hungarian","Indonesian","Italian","Japanese","Klingon","Korean","Latvian","Lithuanian","Malay","Maltese","Norwegian","Persian","Polish","Portuguese","Romanian","Russian","Slovak","Slovenian","Spanish","Swedish","Thai","Turkish","Ukrainian","Urdu","Vietnamese","Welsh"]; var LanguageMenu_callback=function(){ }; var LanguageMenu_popupid='__LanguageMenu_popup'; </script> </div> <div id="CTFLinksPanel"> <span id="ExternalLinksPanel"><a id="HelpLink" title="Help" target="_blank" href="https://go.microsoft.com/?linkid=9722454"> <img id="HelpImg"></a> <a id="EmbedLink" href="javascript:Microsoft.Translator.FloaterShowEmbed()" title="Get this widget for your own site"> <img id="EmbedImg"></a> <a id="ShareLink" title="Share translated page with friends" href="javascript:Microsoft.Translator.FloaterShowSharePanel()"> <img id="ShareImg"></a> </span> </div> <div id="FloaterProgressBar"> <span id="ProgressFill"></span> </div> </div> <div id="WidgetFloaterCollapsed" style="display: none" onmouseover="Microsoft.Translator.OnMouseOverFloater()"> <span>TRANSLATE with </span><img id="CollapsedLogoImg"></div> <div id="FloaterSharePanel" style="display: none"> <div id="ShareTextDiv"> <span id="ShareTextSpan"> COPY THE URL BELOW </span> </div> <div id="ShareTextboxDiv"> <input name="ShareTextbox" type="text" id="ShareTextbox" readonly="readonly" onclick="this.select()"> <!--a id="TwitterLink" title="Share on Twitter"> <img id="TwitterImg" /></a> <a-- id="FacebookLink" title="Share on Facebook"> <img id="FacebookImg" /></a--> <a id="EmailLink" title="Email this translation"> <img id="EmailImg"></a> </div> <div id="ShareFooter"> <span id="ShareHelpSpan"><a id="ShareHelpLink"> <img id="ShareHelpImg"></a></span> <span id="ShareBackSpan"><a id="ShareBack" href="javascript:Microsoft.Translator.FloaterOnShareBackClick()" title="Back To Translation"> Back</a></span> </div> <input name="EmailSubject" type="hidden" id="EmailSubject" value="Check out this page in {0} translated from {1}"> <input name="EmailBody" type="hidden" id="EmailBody" value="Translated: {0}%0d%0aOriginal: {1}%0d%0a%0d%0aAutomatic translation powered by Microsoft® Translator%0d%0ahttp://www.bing.com/translator?ref=MSTWidget"> <input type="hidden" id="ShareHelpText" value="This link allows visitors to launch this page and automatically translate it to {0}."> </div> <div id="FloaterEmbed" style="display: none"> <div id="EmbedTextDiv"> <span id="EmbedTextSpan">EMBED THE SNIPPET BELOW IN YOUR SITE</span> <a id="EmbedHelpLink" title="Copy this code and place it into your HTML."> <img id="EmbedHelpImg"></a> </div> <div id="EmbedTextboxDiv"> <input name="EmbedSnippetTextBox" type="text" id="EmbedSnippetTextBox" readonly="readonly" value="&lt;div id=&#39;MicrosoftTranslatorWidget&#39; class=&#39;Dark&#39; style=&#39;color:white;background-color:#555555&#39;&gt;&lt;/div&gt;&lt;script type=&#39;text/javascript&#39;&gt;setTimeout(function(){var s=document.createElement(&#39;script&#39;);s.type=&#39;text/javascript&#39;;s.charset=&#39;UTF-8&#39;;s.src=((location &amp;&amp; location.href &amp;&amp; location.href.indexOf(&#39;https&#39;) == 0)?&#39;https://ssl.microsofttranslator.com&#39;:&#39;http://www.microsofttranslator.com&#39;)+&#39;/ajax/v3/WidgetV3.ashx?siteData=ueOIGRSKkd965FeEGM5JtQ**&amp;ctf=true&amp;ui=true&amp;settings=manual&amp;from=en&#39;;var p=document.getElementsByTagName(&#39;head&#39;)[0]||document.documentElement;p.insertBefore(s,p.firstChild); },0);&lt;/script&gt;" onclick="this.select()"> </div> <div id="EmbedNoticeDiv"><span id="EmbedNoticeSpan">Enable collaborative features and customize widget: <a href="http://www.bing.com/widget/translator" target="_blank">Bing Webmaster Portal</a></span></div> <div id="EmbedFooterDiv"><span id="EmbedBackSpan"><a href="javascript:Microsoft.Translator.FloaterOnEmbedBackClick()" title="Back To Translation">Back</a></span></div> </div> <script type="text/javascript"> var intervalId = setInterval(function () { if (MtPopUpList) { LanguageMenu = new MtPopUpList(); var langMenu = document.getElementById(LanguageMenu_popupid); var origLangDiv = document.createElement("div"); origLangDiv.id = "OriginalLanguageDiv"; origLangDiv.innerHTML = "<span id='OriginalTextSpan'>ORIGINAL: </span><span id='OriginalLanguageSpan'></span>"; langMenu.appendChild(origLangDiv); LanguageMenu.Init('LanguageMenu', LanguageMenu_keys, LanguageMenu_values, LanguageMenu_callback, LanguageMenu_popupid); window["LanguageMenu"] = LanguageMenu; clearInterval(intervalId); } }, 1); </script> </div></body><app-content ng-version="14.2.0"></app-content></html>

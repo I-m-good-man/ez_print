@@ -1,0 +1,91 @@
+{% extends "/base_templates/base.html" %}
+
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='main/index/styles.css') }}">
+
+    {% block title %}
+        <title>EZ Print</title>
+    {% endblock %}
+{% endblock %}
+
+{% block body %}
+    <body>
+    {% block navbar %}
+        {{ super() }}
+    {% endblock %}
+
+    {% block main %}
+        <!-- Header -->
+        <header class="ez-print-container ez-print-blue center" style="padding: 35vh 16px; height: 100vh;">
+            <h1 class="margin jumbo">EZ Print</h1>
+            <button onclick="location.href='{{ url_for('main.choose_printer') }}'" type="button"
+                    class="button ez-print-blue-button padding-large large margin-top">Начать</button>
+        </header>
+
+        <!-- First Grid -->
+        <div class="row-padding padding-64 ez-print-container">
+            <div class="content">
+                <div class="twothird">
+                    <h1 style="color: #739eff">EZ Print</h1>
+                    <h5 class="padding-16">EZ Print – это онлайн сервис печати документов.</h5>
+                    <ul class="list-unstyled">
+                        <li style="font-size: 16px;">Чтобы распечатать документы:</li>
+                        <li>
+                            <ul>
+                                <li class="element-of-list"><a href="{{ url_for('main.choose_printer') }}">Выбери принтер</a></li>
+                                <li class="element-of-list"><a href="{{ url_for('file_printing.index') }}">Загрузи документы для печати</a></li>
+                                <li class="element-of-list"><a href="{{ url_for('file_printing.index') }}">Выбери настройки печати</a></li>
+                                <li class="element-of-list"><a href="{{ url_for('file_printing.index') }}">Оплати</a></li>
+                                <li class="element-of-list"><a href="{{ url_for('file_printing.index') }}">Забири распечатанные документы</a></li>
+                            </ul>
+                        </li>
+
+                    </ul>
+                    <h3></h3>
+
+                </div>
+
+                <div class="third center">
+                    <img class="logo-img" src="{{ url_for('static', filename='/images/logo.jpg') }}" alt="Лого">
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Second Grid -->
+        <div class="row-padding padding-64 ez-print-container light-ez-print-blue">
+            <div class="content">
+                <div class="twothird">
+                    <h1 style="color: #739eff">Почему EZ Print</h1>
+                    <h5 class="padding-16">Клиенты выбирают нас, потому что:</h5>
+                    <ul class="list-unstyled">
+                        <li>
+                            <ul>
+                                <li class="element-of-list">У нас доступные цены</li>
+                                <li class="element-of-list">Наши услуги печати удобные</li>
+                                <li class="element-of-list">Мы удаляем загруженные документы в течение 24-х часов</li>
+                                <li class="element-of-list">Мы работаем круглосуточно</li>
+                            </ul>
+                        </li>
+
+                    </ul>
+                    <h3></h3>
+                </div>
+            </div>
+        </div>
+
+    {% endblock %}
+
+    {% block footer %}
+        {{ super() }}
+    {% endblock %}
+
+    {% block js_scripts %}
+        {{ super() }}
+    {% endblock %}
+
+    </body>
+{% endblock %}
+

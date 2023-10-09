@@ -1,0 +1,34 @@
+{% extends "/base_templates/base.html" %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='main/shared/styles.css') }}">
+
+    {% block title %}
+        <title>Скоро</title>
+    {% endblock %}
+{% endblock %}
+
+{% block body %}
+    <body>
+    {% block navbar %}
+        {{ super() }}
+    {% endblock %}
+
+    {% block main %}
+        <header class="ez-print-container ez-print-blue center" style="padding: 10px; height: 100vh;">
+            <img style="max-height: 80vh; max-width: 80vw" src="{{ url_for('static', filename='/images/undone_section.jpg') }}" alt="Картинка скоро будет сделано">
+        </header>
+
+    {% endblock %}
+
+    {% block footer %}
+        {{ super() }}
+    {% endblock %}
+
+    {% block js_scripts %}
+        {{ super() }}
+    {% endblock %}
+
+    </body>
+{% endblock %}

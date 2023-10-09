@@ -1,0 +1,26 @@
+{% for (printer, src_to_img_of_printer) in batch_of_printers_and_srcs_to_img_of_printer %}
+    <div class="col-lg-4 col-sm-6 mb-3">
+        <div class="product-card">
+            <div class="product-thumb">
+                <img src="{{ url_for('static', filename=src_to_img_of_printer) }}" alt="Фото принтера">
+            </div>
+            <div class="product-details">
+                <h3>Принтер {{ printer.unique_number }}</h3>
+                <p class="address">Адрес: {{ printer.location.address }}</p>
+                <p class="description">{{ printer.location.description }}</p>
+
+                <div class="product-bottom-details d-flex justify-content-between"></div>
+                {% if printer.ready_to_print == True %}
+                    <form action="{{ url_for('main.choose_num_of_printer_handler', unique_printer_number=printer.unique_number) }}"
+                          method="get">
+                        <input type="submit" value="Выбрать принтер" class="choose-printer-btn"/>
+                    </form>
+                {% else %}
+                    <form action="#" method="get">
+                        <input type="submit" value="Принтер неактивен" class="choose-printer-inactive-btn"/>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endfor %}
